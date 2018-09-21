@@ -85,6 +85,7 @@ public class PublicityAdapterReciclerView extends RecyclerView.Adapter<Publicity
 //                } else  if( store.getStatus_change() == 1) {
                     Poll poll = new Poll();
                     poll.setPublicity_store_id(publicityStore.getId());
+                    poll.setCategory_product_id(publicityStore.getCategory_product_id());
                     if(publicityStore.getCategory_product_id() == 53) {
                         poll.setOrder(7);
                     } else if (publicityStore.getCategory_product_id() == 54) {

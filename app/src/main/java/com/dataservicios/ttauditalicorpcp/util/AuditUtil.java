@@ -1096,4 +1096,52 @@ public class AuditUtil {
         }
         return  publicityStores;
     }
+
+
+    public static boolean saveExhibidorBodegaAlicorp(int store_id, int audit_id, int publicity_id, int category_id, int found , int visible, int contaminated, int status , String comentario, int company_id, int rout_id, int user_id ) {
+        int success;
+        try {
+
+            HashMap<String, String> params = new HashMap<>();
+
+            params.put("store_id", String.valueOf(store_id));
+            params.put("audit_id", String.valueOf(audit_id));
+            params.put("publicity_id", String.valueOf(publicity_id));
+            params.put("category_id", String.valueOf(category_id));
+            params.put("found", String.valueOf(found));
+            params.put("visible", String.valueOf(visible));
+            params.put("contaminated", String.valueOf(contaminated));
+            params.put("status", String.valueOf(status));
+            params.put("comment", String.valueOf(comentario));
+            params.put("company_id", String.valueOf(company_id));
+            params.put("rout_id", String.valueOf(rout_id));
+            params.put("user_id", String.valueOf(user_id));
+
+            JSONParserX jsonParser = new JSONParserX();
+            // getting product details by making HTTP request
+            //JSONObject json = jsonParser.makeHttpRequest(GlobalConstant.dominio + "/json/prueba.json" ,"POST", params);
+            JSONObject json = jsonParser.makeHttpRequest(GlobalConstant.dominio + "/saveExhibidorBodegaAlicorp" ,"POST", params);
+            // check your log for json response
+            Log.d("Login attempt", json.toString());
+            // json success, tag que retorna el json
+            if (json == null) {
+                Log.d("JSON result", "Está en nullo");
+                return false;
+            } else{
+                success = json.getInt("success");
+                if (success == 1) {
+                    Log.d(LOG_TAG, "Se insertó registro correctamente");
+                    return true ;
+                }else{
+                    Log.d(LOG_TAG, "no insertó registro");
+                    // return json.getString("message");
+                    return false;
+                }
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
 }

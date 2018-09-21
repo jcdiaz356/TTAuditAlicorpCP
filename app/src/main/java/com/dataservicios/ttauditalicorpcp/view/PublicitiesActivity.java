@@ -156,13 +156,12 @@ public class PublicitiesActivity extends AppCompatActivity {
         btSave.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-//                for (Publicity p:publicityStores ){
-//
-//                    if(p.getStatus()==0){
-//                        alertDialogBasico(getString(R.string.message_audit_material_pop) + ": \n " + p.getFullname().toString());
-//                        return;
-//                    }
-//                }
+                for (PublicityStore p:publicityStores ){
+                    if(p.getActive()==0){
+                        alertDialogBasico(getString(R.string.message_audit_material_pop) + ": \n " + p.getFullname().toString());
+                        return;
+                    }
+                }
                 AlertDialog.Builder builder = new AlertDialog.Builder(activity);
                 builder.setTitle(R.string.message_save);
                 builder.setMessage(R.string.message_save_information);
@@ -185,7 +184,8 @@ public class PublicitiesActivity extends AppCompatActivity {
 //                                finish();
 //                            }
 //                        }
-
+                        new savePoll().execute();
+                       // finish();
                         dialog.dismiss();
 
                     }
@@ -241,11 +241,11 @@ public class PublicitiesActivity extends AppCompatActivity {
             // dismiss the dialog once productDetail deleted
             if (result){
 
-                //AuditRoadStore auditRoadStore = (AuditRoadStore) auditRoadStoreRepo.findByStoreIdAndAuditId(store_id,audit_id);
+                AuditRoadStore auditRoadStore = (AuditRoadStore) auditRoadStoreRepo.findByStoreIdAndAuditId(store_id,audit_id);
 //                AuditRoadStore auditRoadStore = (AuditRoadStore) auditRoadStoreRepo.findByStoreIdAndAuditIdAndVisitId(store_id,audit_id,store.getVisit_id());
-//                auditRoadStore.setAuditStatus(1);
-//                auditRoadStoreRepo.update(auditRoadStore);
-//                finish();
+                auditRoadStore.setAuditStatus(1);
+                auditRoadStoreRepo.update(auditRoadStore);
+                finish();
             } else {
                 Toast.makeText(activity , R.string.message_no_save_data , Toast.LENGTH_LONG).show();
             }

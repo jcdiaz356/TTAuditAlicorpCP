@@ -4,8 +4,8 @@ package com.dataservicios.ttauditalicorpcp.util;
  */
 public final class GlobalConstant {
 
-//    public static String dominio = "http://ttaudit.com";
-    public static String dominio = "http://192.168.8.110";
+    public static String dominio = "http://ttaudit.com";
+//    public static String dominio = "http://192.168.8.110";
     public static final String URL_USER_IMAGES = dominio + "/media/users/";
     public static final String URL_PUBLICITY_IMAGES = dominio + "/media/images/alicorp/publicities/";
     public static String directory_images = "/Pictures/" ;

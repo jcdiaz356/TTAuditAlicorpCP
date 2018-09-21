@@ -7,8 +7,8 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.AsyncTask;
-import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.text.InputType;
 import android.view.KeyEvent;
@@ -18,6 +18,7 @@ import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
@@ -47,29 +48,32 @@ import com.dataservicios.ttauditalicorpcp.repo.StoreRepo;
 import com.dataservicios.ttauditalicorpcp.util.AuditUtil;
 import com.dataservicios.ttauditalicorpcp.util.GPSTracker;
 import com.dataservicios.ttauditalicorpcp.util.SessionManager;
+import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 
-public class PollPublicityActivity extends AppCompatActivity {
-    private static final String LOG_TAG = StoreAuditActivity.class.getSimpleName();
-    private SessionManager          session;
+public class PublicityDetailActivity extends AppCompatActivity {
+    private static final String LOG_TAG = PublicityDetailActivity.class.getSimpleName();
+    private SessionManager session;
     private Activity                activity =  this;
     private ProgressDialog          pDialog;
     private TextView                tvStoreFullName,tvStoreId,tvAddress ,tvReferencia,tvDistrict,tvAuditoria,tvPoll,tvPublicity,tvType ;
     private EditText                etComent;
     private EditText                etCommentOption;
-    private Button                  btSaveGeo;
+    private Button btSaveGeo;
     private Button                  btSave;
     private CheckBox[]              checkBoxArray;
     private RadioButton[]           radioButtonArray;
     private RadioGroup              radioGroup;
     private Switch                  swYesNo;
+    private Switch                  swYesNo_;
     private ImageButton             btPhoto;
     private LinearLayout            lyComment;
     private LinearLayout            lyOptions;
     private LinearLayout            lyOptionComment;
     private LinearLayout            lyPublicity;
+    private ImageView               imgPublicity;
     private int                     user_id;
     private int                     store_id;
     private int                     audit_id;
@@ -93,11 +97,12 @@ public class PollPublicityActivity extends AppCompatActivity {
     private PollRepo                pollRepo ;
     private AuditRoadStore          auditRoadStore;
     private PollOptionRepo          pollOptionRepo;
-//    private PublicityRepo           publicityRepo;
+    //    private PublicityRepo           publicityRepo;
     private PublicityStoreRepo      publicityStoreRepo;
     private GPSTracker              gpsTracker;
-    private ArrayList<PollOption>   pollOptions;
+    private ArrayList<PollOption> pollOptions;
     private int                     isYesNo;
+    private int                     isYesNo_;
     private String                  comment;
     private String                  selectedOptions;
     private String                  commentOptions;
@@ -125,7 +130,7 @@ public class PollPublicityActivity extends AppCompatActivity {
      * @return retorna un Intent listo para usar
      */
     private static Intent getLaunchIntent(Context context, int store_id, int audit_id, Poll poll) {
-        Intent intent = new Intent(context, PollPublicityActivity.class);
+        Intent intent = new Intent(context, PublicityDetailActivity.class);
         intent.putExtra("store_id"              , store_id);
         intent.putExtra("audit_id"              , audit_id);
         intent.putExtra("orderPoll"             , poll.getOrder());
@@ -139,7 +144,7 @@ public class PollPublicityActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_poll_publicity);
+        setContentView(R.layout.activity_publicity_detail);
 
 
         tvStoreFullName     = (TextView)    findViewById(R.id.tvStoreFullName) ;
@@ -155,10 +160,13 @@ public class PollPublicityActivity extends AppCompatActivity {
         btSave              = (Button)      findViewById(R.id.btSave);
         btPhoto             = (ImageButton) findViewById(R.id.btPhoto);
         swYesNo             = (Switch)      findViewById(R.id.swYesNo);
+        swYesNo_             = (Switch)      findViewById(R.id.swYesNo_);
         lyComment           = (LinearLayout)findViewById(R.id.lyComment);
         lyOptions           = (LinearLayout)findViewById(R.id.lyOptions);
         lyOptionComment     = (LinearLayout)findViewById(R.id.lyOptionComment);
         lyPublicity         = (LinearLayout) findViewById(R.id.lyPublicity);
+        imgPublicity         = (ImageView)  findViewById(R.id.imgPublicity);
+
         DatabaseManager.init(this);
         gpsTracker = new GPSTracker(activity);
         if(!gpsTracker.canGetLocation()){
@@ -198,16 +206,25 @@ public class PollPublicityActivity extends AppCompatActivity {
         store               = (Store)           storeRepo.findById(store_id);
         route               = (Route)           routeRepo.findById(store.getRoute_id());
         auditRoadStore      = (AuditRoadStore)  auditRoadStoreRepo.findByStoreIdAndAuditId(store_id,audit_id);
-        poll                = (Poll)            pollRepo.findByCompanyAuditIdAndOrder(auditRoadStore.getList().getCompany_audit_id(),orderPoll);
+        poll = new Poll();
+//        poll                = (Poll)            pollRepo.findByCompanyAuditIdAndOrder(auditRoadStore.getList().getCompany_audit_id(),orderPoll);
         //publicity           = (Publicity)       publicityRepo.findById(publicity_id);
         publicityStore      = (PublicityStore)  publicityStoreRepo.findById(publicity_store_id);
         publicity_id        = publicityStore.getPublicity_id();
 
 
+        Picasso.with(activity)
+                .load(publicityStore.getImage())
+                .placeholder(R.drawable.loading_image)
+                .error(R.drawable.thumbs_ttaudit)
+                .into(imgPublicity);
+
+        poll.setId(0);
         poll.setCategory_product_id(category_product_id);
         poll.setProduct_id(product_id);
         poll.setPublicity_id(publicity_id);
         poll.setPublicity_store_id(publicity_store_id);
+        poll.setOrder(0);
         pollOptions = (ArrayList<PollOption>) pollOptionRepo.findByPollId(poll.getId());
 
         //showToolbar(publicity.getFullname(),false);
@@ -218,11 +235,12 @@ public class PollPublicityActivity extends AppCompatActivity {
         tvReferencia.setText(String.valueOf(store.getUrbanization()));
         tvDistrict.setText(String.valueOf(store.getDistrict()));
         tvAuditoria.setText(auditRoadStore.getList().getFullname().toString());
-        tvPoll.setText(poll.getQuestion().toString());
+        // tvPoll.setText(poll.getQuestion().toString());
         tvType.setText(String.valueOf(store.getType()) + " (" + store.getCadenRuc() + ")");
         tvPublicity.setText(publicityStore.getFullname().toString());
 
         showToolbar(auditRoadStore.getList().getFullname().toString(),true);
+        showCommentControl(true,0);
 
 //        if(publicity != null) {
 //            tvPublicity.setText(publicity.getFullname().toString() + " ("+ publicity.getId() + ") ");
@@ -230,7 +248,7 @@ public class PollPublicityActivity extends AppCompatActivity {
 //            lyPublicity.removeAllViews();
 //        }
 
-        establishigPropertyPool(orderPoll);
+//        establishigPropertyPool(orderPoll);
 
         btPhoto.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -253,6 +271,7 @@ public class PollPublicityActivity extends AppCompatActivity {
                         commentOptions = "";
                         comment = "";
                         if(swYesNo.isChecked())isYesNo=1; else isYesNo =0;
+                        if(swYesNo_.isChecked())isYesNo_=1; else isYesNo_ =0;
                         selectedOptions="";
                         int counterSelected =0;
                         if(radioButtonArray != null) {
@@ -289,7 +308,7 @@ public class PollPublicityActivity extends AppCompatActivity {
                             }
                         }
                         comment = etComent.getText().toString();
-                       // commentOptions = etCommentOption.getText().toString();
+                        // commentOptions = etCommentOption.getText().toString();
 
                         new savePoll().execute();
                         dialog.dismiss();
@@ -399,26 +418,12 @@ public class PollPublicityActivity extends AppCompatActivity {
         pollDetail.setSelectedOtionsComment(commentOptions);
         pollDetail.setPriority(0);
 
-        if(poll.getCategory_product_id() == 54) {
-
-            switch (orderPoll) {
-                case 3: case 4:case 5: case 6: case 7: case 11:case 12:
-                    if (!AuditUtil.insertPollDetail(pollDetail)) return false;
-                    break;
-                default:
-                    if (!AuditUtil.insertPollDetail(pollDetail)) return false;
-                    break;
-            }
-        }
-
         if(poll.getCategory_product_id() == 53) {
 
             switch (orderPoll) {
-                case 7: case 11:case 12:
-                    if (!AuditUtil.insertPollDetail(pollDetail)) return false;
-                    break;
-                default:
-                    if (!AuditUtil.insertPollDetail(pollDetail)) return false;
+                case 0:
+//                    if (!AuditUtil.insertPollDetail(pollDetail)) return false;
+                    if(! AuditUtil.saveExhibidorBodegaAlicorp(store_id,audit_id,publicity_id,0,1,isYesNo,isYesNo_,0, pollDetail.getComentario(),company_id,route.getId(),user_id)) return false ;
                     break;
             }
         }
@@ -435,69 +440,11 @@ public class PollPublicityActivity extends AppCompatActivity {
 
         switch (orderPoll) {
 
-            case 3:
-                publicityStore.setActive(1);
-                publicityStoreRepo.update(publicityStore);
-                finish();
-                break;
-            case 4:
-                if(isYesNo==1){
-                    poll.setOrder(5);
-                    PollPublicityActivity.createInstance(activity, store_id,audit_id,poll);
-                    finish();
-                    break;
-                } else if(isYesNo==0){
-
-                    publicityStore.setActive(1);
-                    publicityStoreRepo.update(publicityStore);
-                    finish();
-                    break;
-                }
-            case 5:
-                poll.setOrder(6);
+            case 0:
+                poll.setOrder(11);
                 PollPublicityActivity.createInstance(activity, store_id,audit_id,poll);
                 finish();
                 break;
-
-            case 6:
-                poll.setOrder(3);
-                PollPublicityActivity.createInstance(activity, store_id,audit_id,poll);
-                finish();
-                break;
-
-            case 7:
-
-
-                if(isYesNo==1){
-                    poll.setOrder(0);
-                    PublicityDetailActivity.createInstance(activity, store_id,audit_id,poll);
-                    finish();
-                    break;
-                } else if(isYesNo==0){
-                    publicityStore.setActive(1);
-                    publicityStoreRepo.update(publicityStore);
-                    finish();
-                    break;
-                }
-
-            case 11:
-                if(isYesNo==1){
-                    poll.setOrder(12);
-                    PollPublicityActivity.createInstance(activity, store_id,audit_id,poll);
-                    finish();
-                    break;
-                } else if(isYesNo==0){
-                    publicityStore.setActive(1);
-                    publicityStoreRepo.update(publicityStore);
-                    finish();
-                    break;
-                }
-            case 12:
-
-                    publicityStore.setActive(1);
-                    publicityStoreRepo.update(publicityStore);
-                    finish();
-                    break;
 
         }
 
@@ -546,7 +493,7 @@ public class PollPublicityActivity extends AppCompatActivity {
      * @param visibility
      */
     private void showCommentControl(boolean visibility, int type) {
-        etComent.setHint(poll.getComentTag().toString());
+        etComent.setHint("");
         switch (type){
             case 0:
                 etComent.setInputType(InputType.TYPE_TEXT_FLAG_CAP_WORDS );

@@ -1,13 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.dataservicios.ttauditalicorpcp">
+
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.CAMERA" />
     <uses-permission android:name="android.permission." />
+
     <uses-feature
         android:name="android.hardware.camera"
         android:required="true" />
+
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
     <!--
@@ -19,6 +22,7 @@
     <!-- PERMISO PARA HACER LLAMADA DESDE LA APP A UN PHONO -->
     <uses-permission android:name="android.permission.CALL_PHONE" />
     <uses-permission android:name="android.permission.READ_PHONE_STATE" />
+
     <application
         android:name=".app.AppController"
         android:allowBackup="true"
@@ -99,7 +103,6 @@
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
         </activity>
-
         <activity
             android:name=".view.PublicitiesActivity"
             android:launchMode="singleTop"
@@ -108,7 +111,6 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".view.StoreAuditActivity" />
         </activity>
-
         <activity
             android:name=".view.PollPublicityActivity"
             android:screenOrientation="portrait">
@@ -116,11 +118,9 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".view.PublicitiesActivity" />
         </activity>
-
         <activity
             android:name=".view.AndroidCustomGalleryActivity"
             android:screenOrientation="portrait" />
-
         <activity android:name=".view.ProductCompetityActivity" />
         <!--
              The API key for Google Maps-based APIs is defined as a string resource.
@@ -149,7 +149,15 @@
                 android:resource="@xml/file_paths" />
         </provider>
 
-        <activity android:name=".view.MarkCardActivity"></activity>
+        <activity android:name=".view.MarkCardActivity" />
+        <!--<activity android:name=".view.PublicityDetailActivity"></activity>-->
+        <activity
+            android:name=".view.PublicityDetailActivity"
+            android:screenOrientation="portrait">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".view.PublicityDetailActivity" />
+        </activity>
     </application>
 
 </manifest>
