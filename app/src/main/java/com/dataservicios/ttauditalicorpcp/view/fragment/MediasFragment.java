@@ -1,6 +1,7 @@
 package com.dataservicios.ttauditalicorpcp.view.fragment;
 
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
@@ -16,6 +17,7 @@ import com.dataservicios.ttauditalicorpcp.adapter.MediaAdapterReciclerView;
 import com.dataservicios.ttauditalicorpcp.db.DatabaseManager;
 import com.dataservicios.ttauditalicorpcp.model.Media;
 import com.dataservicios.ttauditalicorpcp.repo.MediaRepo;
+import com.dataservicios.ttauditalicorpcp.services.UpdateService;
 import com.dataservicios.ttauditalicorpcp.util.SessionManager;
 
 import java.util.ArrayList;
@@ -36,7 +38,6 @@ public class MediasFragment extends Fragment {
     private Media                       media;
     private MediaRepo                   mediaRepo;
 
-
     public MediasFragment() {
         // Required empty public constructor
     }
@@ -50,9 +51,12 @@ public class MediasFragment extends Fragment {
 
         DatabaseManager.init(getActivity());
 
+        getActivity().stopService(new Intent(getActivity(), UpdateService.class));
+
+
+
         mediaRepo = new MediaRepo(getActivity());
         ArrayList<Media> medias = (ArrayList<Media>) mediaRepo.findAll();
-
 
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_medias, container, false);
@@ -71,13 +75,11 @@ public class MediasFragment extends Fragment {
         };
 
 
-
-
-
         mediaAdapterRecyclerView =  new MediaAdapterReciclerView(medias, R.layout.cardview_media, getActivity());
         mediaRecycler.setAdapter(mediaAdapterRecyclerView);
 
         // new loadRoute().execute();
+
 
 
         return view;
@@ -88,9 +90,22 @@ public class MediasFragment extends Fragment {
     @Override
     public void onResume() {
         super.onResume();
+        //getActivity().startService(new Intent(getActivity(), UpdateService.class));
+
+    }
+    //El Fragment ha sido quitado de su Activity y ya no está disponible
+    @Override
+    public void onDetach() {
+        super.onDetach();
+       // getActivity().startService(new Intent(getActivity(), UpdateService.class));
+       // getActivity().startService(new Intent(getActivity(), UpdateService.class));
+    }
+    @Override
+    public void onDestroy() {
+
+        getActivity().startService(new Intent(getActivity(), UpdateService.class));
+        super.onDestroy();
 
 
     }
-
-
 }

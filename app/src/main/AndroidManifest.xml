@@ -122,6 +122,11 @@
             android:name=".view.AndroidCustomGalleryActivity"
             android:screenOrientation="portrait" />
         <activity android:name=".view.ProductCompetityActivity" />
+
+        <activity android:name=".view.CameraActivity" />
+
+        <activity android:name=".view.GaleryImagesActivity"></activity>
+
         <!--
              The API key for Google Maps-based APIs is defined as a string resource.
              (See the file "res/values/google_maps_api.xml").
@@ -158,6 +163,15 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".view.PublicityDetailActivity" />
         </activity>
+        <activity
+            android:name=".view.PollProductActivity"
+            android:screenOrientation="portrait">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".view.PublicitiesActivity" />
+        </activity>
+        <activity android:name=".view.CategoryProductActivity"></activity>
+
     </application>
 
 </manifest>

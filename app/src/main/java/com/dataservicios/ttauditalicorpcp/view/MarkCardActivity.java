@@ -101,10 +101,14 @@ public class MarkCardActivity extends AppCompatActivity implements OnMapReadyCal
 
         etFullName.setText(user.getFullname().toString());
 
-        Picasso.with(activity)
-               .load(GlobalConstant.URL_USER_IMAGES + user.getImage().toString())
-               .error(R.drawable.avataruser)
-               .into(imcUser);
+        Picasso.get()
+                .load(GlobalConstant.URL_USER_IMAGES + user.getImage().toString())
+                .error(R.drawable.avataruser)
+                .into(imcUser);
+//        Picasso.with(activity)
+//               .load(GlobalConstant.URL_USER_IMAGES + user.getImage().toString())
+//               .error(R.drawable.avataruser)
+//               .into(imcUser);
 
         SupportMapFragment mapFragmentOutPut = (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.mapOutPut);
         mapFragmentOutPut.getMapAsync(this);

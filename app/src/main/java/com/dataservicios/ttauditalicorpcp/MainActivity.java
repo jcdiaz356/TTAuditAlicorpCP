@@ -18,12 +18,14 @@ import android.widget.TextView;
 
 import com.dataservicios.ttauditalicorpcp.db.DatabaseManager;
 import com.dataservicios.ttauditalicorpcp.model.Audit;
+import com.dataservicios.ttauditalicorpcp.model.CategoryProduct;
 import com.dataservicios.ttauditalicorpcp.model.Company;
 import com.dataservicios.ttauditalicorpcp.model.Poll;
 import com.dataservicios.ttauditalicorpcp.model.PollOption;
 import com.dataservicios.ttauditalicorpcp.model.Product;
 import com.dataservicios.ttauditalicorpcp.model.PublicityStore;
 import com.dataservicios.ttauditalicorpcp.repo.AuditRepo;
+import com.dataservicios.ttauditalicorpcp.repo.CategoryProductRepo;
 import com.dataservicios.ttauditalicorpcp.repo.CompanyRepo;
 import com.dataservicios.ttauditalicorpcp.repo.PollOptionRepo;
 import com.dataservicios.ttauditalicorpcp.repo.PollRepo;
@@ -88,7 +90,6 @@ public class MainActivity extends AppCompatActivity {
         }
         @Override
         protected void onPreExecute() {
-
             tvLoad.setText(getString(R.string.text_loading));
            // super.onPreExecute();
         }
@@ -101,7 +102,25 @@ public class MainActivity extends AppCompatActivity {
             publishProgress(activity.getString(R.string.text_download_companies));
 
             CompanyRepo companyRepo = new CompanyRepo(activity);
+
             company = AuditUtil.getCompany(1,1,app_id);
+
+
+//            -----------------PARA PRUEBAS----------------------
+
+//            company.setId(223);
+//            company.setActive(1);
+//            company.setApp_id("com.dataservicios.ttauditalicorpcp");
+//            company.setCustomer_id(4);
+//            company.setFullname("Cliente Perfecto Estudio 2 2018");
+//            company.setLogo("");
+//            company.setVisible(1);
+//            company.setMarkerPoint("http://ttaudit.com/rutas-auditor/img/marker_bayer_mercaderismo_app.png");
+//            companyRepo.deleteAll();
+//            companyRepo.create(company);
+
+//            -------------------------------------------------
+
             if(company.getId() == 0) {
                 return false;
             } else {
@@ -208,6 +227,23 @@ public class MainActivity extends AppCompatActivity {
                     if(publicityStores.size()!=0){
                         for(PublicityStore p: publicityStores){
                             publicityStoreRepo.create(p);
+                        }
+                    } else  {
+                        return  false;
+                    }
+                }
+
+
+                publishProgress(activity.getString(R.string.text_download_category_product));
+                CategoryProductRepo categoryProductRepo = new CategoryProductRepo(activity);
+                ArrayList<CategoryProduct> categoryProducts = (ArrayList<CategoryProduct>) categoryProductRepo.findAll();
+
+                if(categoryProducts.size()==0){
+                    categoryProductRepo.deleteAll();
+                    categoryProducts = AuditUtil.getListCategoryProduct();
+                    if(categoryProducts.size()!=0){
+                        for(CategoryProduct p: categoryProducts){
+                            categoryProductRepo.create(p);
                         }
                     } else  {
                         return  false;

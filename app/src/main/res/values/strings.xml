@@ -184,5 +184,20 @@
     <string name="message_audit_all_product">Tiene que auditar todo los productos para guardar</string>
     <string name="text_material">Material:</string>
 
+    <string name="action_photo">Tomar Foto</string>
+    <string name="action_upload_photo">Subir Photo</string>
+    <string name="action_delete_photo">Eliminar Photo</string>
+    <string name="action_sharing_photo">Compartir Photo</string>
+
+
+    <string name="message_delete_file">Eliminar Archivo</string>
+    <string name="message_delete_file_information">Está seguro que desea  eliminar el archivo?</string>
+    <string name="text_download_category_product">Descargando categorias de productos</string>
+    <string name="text_categories">Categorias</string>
+    <string name="text_upload_photo">Subir Foto</string>
+    <string name="text_upload_photo_progress">Cargando foto ...</string>
+    <string name="message_error_upload_file">No se pudo cargar la foto, vuelva a intetar</string>
+    <string name="message_audit_categories">Tiene que auditar todas las categorias</string>
+
 
 </resources>

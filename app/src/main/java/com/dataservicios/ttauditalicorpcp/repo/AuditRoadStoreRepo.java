@@ -148,7 +148,8 @@ public class AuditRoadStoreRepo implements Crud {
 
         List<AuditRoadStore> wishList = null;
         try {
-            wishList = helper.getAuditRoadStoreDao().queryBuilder().orderBy("audit_id",false).where().eq("store_id",store_id).query();
+            wishList = helper.getAuditRoadStoreDao().queryBuilder().orderBy("order",true).where().eq("store_id",store_id).query();
+//            wishList = helper.getAuditRoadStoreDao().queryBuilder().where().eq("store_id",store_id).query();
         } catch (SQLException e) {
             e.printStackTrace();
         }

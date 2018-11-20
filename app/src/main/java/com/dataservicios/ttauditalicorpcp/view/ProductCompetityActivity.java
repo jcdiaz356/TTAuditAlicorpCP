@@ -25,6 +25,7 @@ import com.dataservicios.ttauditalicorpcp.adapter.ProductAdapterRecyclerView;
 import com.dataservicios.ttauditalicorpcp.db.DatabaseManager;
 import com.dataservicios.ttauditalicorpcp.model.Audit;
 import com.dataservicios.ttauditalicorpcp.model.AuditRoadStore;
+import com.dataservicios.ttauditalicorpcp.model.CategoryProduct;
 import com.dataservicios.ttauditalicorpcp.model.Company;
 import com.dataservicios.ttauditalicorpcp.model.Poll;
 import com.dataservicios.ttauditalicorpcp.model.Product;
@@ -32,6 +33,7 @@ import com.dataservicios.ttauditalicorpcp.model.Route;
 import com.dataservicios.ttauditalicorpcp.model.Store;
 import com.dataservicios.ttauditalicorpcp.repo.AuditRepo;
 import com.dataservicios.ttauditalicorpcp.repo.AuditRoadStoreRepo;
+import com.dataservicios.ttauditalicorpcp.repo.CategoryProductRepo;
 import com.dataservicios.ttauditalicorpcp.repo.CompanyRepo;
 import com.dataservicios.ttauditalicorpcp.repo.ProductRepo;
 import com.dataservicios.ttauditalicorpcp.repo.RouteRepo;
@@ -51,6 +53,7 @@ public class ProductCompetityActivity extends AppCompatActivity {
     private int                                     user_id;
     private int                                     store_id;
     private int                                     audit_id;
+    private int                                     category_product_id;
     private TextView tvTotal;
     private Button btSave;
     private ProductRepo productRepo;
@@ -59,6 +62,7 @@ public class ProductCompetityActivity extends AppCompatActivity {
     private CompanyRepo companyRepo ;
     private AuditRepo auditRepo ;
     private AuditRoadStoreRepo auditRoadStoreRepo ;
+    private CategoryProductRepo categoryProductRepo;
     private ProductAdapterRecyclerView productAdapterRecyclerView;
     private RecyclerView productRecyclerView;
     private Audit audit ;
@@ -66,7 +70,9 @@ public class ProductCompetityActivity extends AppCompatActivity {
     private Company company ;
     private Route route ;
     private Store store ;
+    private CategoryProduct categoryProduct;
     private ArrayList<Product> products;
+    private ArrayList<CategoryProduct> categoryProducts;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -77,19 +83,22 @@ public class ProductCompetityActivity extends AppCompatActivity {
         DatabaseManager.init(this);
 
         storeRepo           = new StoreRepo(activity);
-        productRepo = new ProductRepo(activity);
+        productRepo         = new ProductRepo(activity);
         auditRepo           = new AuditRepo(activity);
         companyRepo         = new CompanyRepo(activity);
         routeRepo           = new RouteRepo(activity);
         auditRoadStoreRepo  = new AuditRoadStoreRepo(activity);
+        categoryProductRepo = new CategoryProductRepo(activity);
 
         Bundle bundle = getIntent().getExtras();
-        store_id = bundle.getInt("store_id");
-        audit_id = bundle.getInt("audit_id");
+        store_id            = bundle.getInt("store_id");
+        audit_id            = bundle.getInt("audit_id");
+        category_product_id = bundle.getInt("category_product_id");
 
-        company = (Company)companyRepo.findFirstReg();
-        store   = (Store) storeRepo.findById(store_id);
-        route   = (Route) routeRepo.findById(store.getRoute_id());
+        company         = (Company)companyRepo.findFirstReg();
+        store           = (Store) storeRepo.findById(store_id);
+        route           = (Route) routeRepo.findById(store.getRoute_id());
+        categoryProduct = (CategoryProduct) categoryProductRepo.findById(category_product_id);
 
         session = new SessionManager(activity);
         HashMap<String, String> userSesion = session.getUserDetails();
@@ -103,7 +112,8 @@ public class ProductCompetityActivity extends AppCompatActivity {
         linearLayoutManager.setOrientation(LinearLayoutManager.VERTICAL);
         productRecyclerView.setLayoutManager(linearLayoutManager);
 
-        products = (ArrayList<Product>) productRepo.findAll();
+        products = (ArrayList<Product>) productRepo.findByCategoryProductId(category_product_id);
+       // products = (ArrayList<Product>) productRepo.findAll();
 
         productAdapterRecyclerView =  new ProductAdapterRecyclerView(products, R.layout.cardview_product, activity,store_id,audit_id);
         productRecyclerView.setAdapter(productAdapterRecyclerView);
@@ -133,6 +143,8 @@ public class ProductCompetityActivity extends AppCompatActivity {
                 }
 
 
+
+
                 AlertDialog.Builder builder = new AlertDialog.Builder(activity);
                 builder.setTitle(R.string.message_save);
                 builder.setMessage(R.string.message_save_information);
@@ -144,9 +156,13 @@ public class ProductCompetityActivity extends AppCompatActivity {
                         // new savePoll().execute();
 
 
-                        Poll poll = new Poll();
-                        poll.setOrder(9);
-                        PollActivity.createInstance((Activity) activity, store_id,audit_id,poll);
+//                        Poll poll = new Poll();
+//                        poll.setOrder(9);
+//                        PollActivity.createInstance((Activity) activity, store_id,audit_id,poll);
+
+
+                        categoryProduct.setStatus(1);
+                        categoryProductRepo.update(categoryProduct);
 
                         finish();
                         dialog.dismiss();

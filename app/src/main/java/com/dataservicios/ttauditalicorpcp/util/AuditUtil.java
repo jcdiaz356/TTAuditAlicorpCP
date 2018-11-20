@@ -4,8 +4,14 @@ import android.content.Context;
 import android.graphics.Bitmap;
 import android.util.Log;
 
+import com.androidnetworking.AndroidNetworking;
+import com.androidnetworking.common.ANRequest;
+import com.androidnetworking.common.ANResponse;
+import com.androidnetworking.error.ANError;
+import com.androidnetworking.interfaces.UploadProgressListener;
 import com.dataservicios.ttauditalicorpcp.model.Audit;
 import com.dataservicios.ttauditalicorpcp.model.AuditRoadStore;
+import com.dataservicios.ttauditalicorpcp.model.CategoryProduct;
 import com.dataservicios.ttauditalicorpcp.model.Company;
 import com.dataservicios.ttauditalicorpcp.model.Media;
 import com.dataservicios.ttauditalicorpcp.model.Poll;
@@ -32,6 +38,8 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.HashMap;
 
+import okhttp3.Response;
+
 /**
  * Created by Jaime on 28/08/2016.
  */
@@ -55,16 +63,8 @@ public class AuditUtil {
         //Bitmap scaledBitmap;
         bbicon = BitmapLoader.loadBitmap(file.getAbsolutePath(),280,280);
 
-//        if(Build.MODEL.equals("MotoG3")){
-//            //scaledBitmap = BitmapLoader.scaleDown() BitmapLoader.rotateImage(bbicon,0);
-//            scaledBitmap = BitmapLoader.rotateImage(BitmapLoader.scaleDown(bbicon, 540 , true),0);
-//        } else {
-//            //scaledBitmap = BitmapLoader.rotateImage(bbicon,90);
-//            scaledBitmap = BitmapLoader.rotateImage(BitmapLoader.scaleDown(bbicon, 540 , true),90);
-//        }
-
         ByteArrayOutputStream bos = new ByteArrayOutputStream();
-        bbicon.compress(Bitmap.CompressFormat.JPEG,50, bos);
+        bbicon.compress(Bitmap.CompressFormat.JPEG,100, bos);
         try {
 
             ContentBody photo = new ByteArrayBody(bos.toByteArray(), file.getName());
@@ -91,8 +91,8 @@ public class AuditUtil {
 
             URL url = new URL(url_upload_image);
             httpConnection = (HttpURLConnection) url.openConnection();
-            httpConnection.setReadTimeout(10000);
-            httpConnection.setConnectTimeout(15000);
+            httpConnection.setReadTimeout(20000);
+            httpConnection.setConnectTimeout(25000);
             httpConnection.setRequestMethod("POST");
             httpConnection.setUseCaches(false);
             httpConnection.setDoInput(true);
@@ -106,22 +106,20 @@ public class AuditUtil {
             httpConnection.connect();
 
             if (httpConnection.getResponseCode() == HttpURLConnection.HTTP_OK) {
-                Log.d("UPLOAD", "HTTP 200 OK." + httpConnection.getResponseCode()+" "+httpConnection.getResponseMessage()+".");
-                //return readStream(httpConnection.getInputStream());
-                //This return returns the response from the upload.
-
-                if(file.exists()){
-                    file.delete();
-                }
+                Log.d(LOG_TAG, "HTTP 200 OK." + httpConnection.getResponseCode()+" "+httpConnection.getResponseMessage()+".");
+//                if(file.exists()){
+//                    file.delete();
+//                }
                 return  true ;
 
             } else {
-                Log.d("UPLOAD", "HTTP "+httpConnection.getResponseCode()+" "+httpConnection.getResponseMessage()+".");
+                Log.d(LOG_TAG, "HTTP "+httpConnection.getResponseCode()+" "+httpConnection.getResponseMessage()+".");
                 return  false ;
             }
 
         } catch (Exception e) {
             // TODO Auto-generated catch block
+            Log.e(LOG_TAG, e.getMessage().toString());
             e.printStackTrace();
             return  false ;
         }finally {
@@ -130,6 +128,60 @@ public class AuditUtil {
             }
         }
         //return true;
+    }
+
+    /**
+     * Envio de fotos, Solicitud sincrónica usando librería AndroidNetworking
+     * @param media
+     * @return
+     */
+    public boolean  sendUploadPhotoServer(final Media media ){
+
+        boolean result = false;
+        HashMap<String, String> params = new HashMap<>();
+
+        File file = new File(BitmapLoader.getAlbumDirTemp(context).getAbsolutePath() + "/" + media.getFile());
+
+        // params.put("fotoUp"               ,  imgFile                                                            );
+        params.put("archivo"              ,  String.valueOf(media.getFile())                );
+        params.put("store_id"             ,  String.valueOf(media.getStore_id())              );
+        params.put("product_id"           ,  String.valueOf(media.getProduct_id())            );
+        params.put("poll_id"              ,  String.valueOf(media.getPoll_id())               );
+        params.put("publicities_id"       ,  String.valueOf(media.getPublicity_id())          );
+        params.put("category_product_id"  ,  String.valueOf(media.getCategory_product_id())   );
+        params.put("company_id"           ,  String.valueOf(media.getCompany_id())            );
+        params.put("tipo"                 ,  String.valueOf(media.getType())                  );
+        params.put("monto"                ,  String.valueOf(media.getMonto())                 );
+        params.put("razon_social"         ,  String.valueOf(media.getRazonSocial())           );
+        params.put("horaSistema"          ,  String.valueOf(media.getCreated_at())            );
+
+        // Solicitud sincrónica usando librería AndroidNetworking
+        ANRequest request = AndroidNetworking.upload(GlobalConstant.dominio + "/insertImagesMayorista")
+                .addMultipartFile("fotoUp",file)
+                .addMultipartParameter(params)
+                .build()
+                .setUploadProgressListener(new UploadProgressListener() {
+                    @Override
+                    public void onProgress(long bytesUploaded, long totalBytes) {
+                        // do anything with progress
+                    }
+                });
+
+        ANResponse<JSONObject> response = request.executeForJSONObject();
+
+        if (response.isSuccess()) {
+            JSONObject jsonObject = response.getResult();
+            Log.d(LOG_TAG, "response : " + jsonObject.toString());
+            Response okHttpResponse = response.getOkHttpResponse();
+            Log.d(LOG_TAG, "headers : " + okHttpResponse.headers().toString());
+            result = true;
+        } else {
+            ANError error = response.getError();
+            // Handle Error
+            result = false;
+        }
+
+        return result;
     }
 
     /**
@@ -220,7 +272,7 @@ public class AuditUtil {
 
                             product.setId(obj.getInt("id"));
                             product.setCompany_id(obj.getInt("company_id"));
-                            product.setCategory_product_id(1);
+                            product.setCategory_product_id(obj.getInt("category_product_id"));
                             if(obj.isNull("fullname")) product.setFullname("");  else product.setFullname(obj.getString("fullname"));
                             if(obj.isNull("precio")) product.setPrecio("");  else product.setPrecio(obj.getString("precio"));
                             if(obj.isNull("imagen")) product.setImagen("/media/images/");  else product.setImagen(GlobalConstant.dominio + "/media/images/" + obj.getString("imagen"));;
@@ -749,6 +801,7 @@ public class AuditUtil {
                             auditRoadStore.setAudit_id(obj.getInt("audit_id"));
                             auditRoadStore.setStore_id(obj.getInt("store_id"));
                             auditRoadStore.setAuditStatus(obj.getInt("audit"));
+                            auditRoadStore.setOrder(obj.getInt("orden"));
 
                             auditRoadsStores.add(i,auditRoadStore);
                         }
@@ -952,7 +1005,6 @@ public class AuditUtil {
             params.put("longitud"       , String.valueOf(longitude));
 
             JSONParserX jsonParser = new JSONParserX();
-
             JSONObject json = jsonParser.makeHttpRequest(GlobalConstant.dominio + "/updatePositionStore" ,"POST", params);
             Log.d(LOG_TAG, json.toString());
 
@@ -976,17 +1028,7 @@ public class AuditUtil {
             e.printStackTrace();
             return false;
         }
-
     }
-
-//    $store_id = $valoresPost['store_id'];
-//    $user_id = $valoresPost['user_id'];
-//    $company_id = $valoresPost['company_id'];
-//    $direccion  = $valoresPost['direccion'];
-//    $referencia = $valoresPost['referencia'];
-//    $userName = $valoresPost['userName'];
-//    $storeName = Input::only('storeName');
-//    $comentario = Input::only('comentario');
 
     /**
      * Cambia la direción de un store
@@ -1143,5 +1185,98 @@ public class AuditUtil {
             e.printStackTrace();
             return false;
         }
+    }
+
+    public static boolean saveSODBodegaAlicorp(int company_id,int poll_id, int store_id, int audit_id,int rout_id, int user_id,int publicity_id , int result) {
+        int success;
+        try {
+            HashMap<String, String> params = new HashMap<>();
+
+            params.put("poll_id", String.valueOf(poll_id));
+            params.put("store_id", String.valueOf(store_id));
+            params.put("result", String.valueOf(result));
+            params.put("audit_id", String.valueOf(audit_id));
+            params.put("company_id", String.valueOf(company_id));
+            params.put("rout_id", String.valueOf(rout_id));
+            params.put("user_id", String.valueOf(user_id));
+            params.put("publicity_id", String.valueOf(publicity_id));
+
+
+            JSONParserX jsonParser = new JSONParserX();
+            // getting product details by making HTTP request
+            JSONObject json = jsonParser.makeHttpRequest(GlobalConstant.dominio + "/saveSODBodegaAlicorp" ,"POST", params);
+            // check your log for json response
+            Log.d("Login attempt", json.toString());
+            // json success, tag que retorna el json
+            if (json == null) {
+                Log.d("JSON result", "Está en nullo");
+                return false;
+            } else{
+                success = json.getInt("success");
+                if (success == 1) {
+                    Log.d(LOG_TAG, "Se insertó registro correctamente");
+                }else{
+                    Log.d(LOG_TAG, "no insertó registro");
+                    // return json.getString("message");
+                    // return false;
+                }
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            return false;
+        }
+        return true;
+    }
+
+    public static ArrayList<CategoryProduct> getListCategoryProduct() {
+
+        int success ;
+
+        ArrayList<CategoryProduct> categoryProducts= new ArrayList<CategoryProduct>();
+        try {
+            HashMap<String, String> params = new HashMap<>();
+            params.put("company_id", String.valueOf(""));
+            JSONParserX jsonParser = new JSONParserX();
+            // getting product details by making HTTP request
+            JSONObject json = jsonParser.makeHttpRequest(GlobalConstant.dominio + "/getCategoryProductsOsaCP" ,"POST", params);
+            // check your log for json response
+            Log.d("Login attempt", json.toString());
+            // json success, tag que retorna el json
+            if (json == null) {
+                Log.d("JSON result", "Está en nullo");
+            } else{
+                success = json.getInt("success");
+                if (success > 0) {
+                    JSONArray ObjJson;
+                    ObjJson = json.getJSONArray("categories");
+                    // looping through All Products
+                    if(ObjJson.length() > 0) {
+
+                        for (int i = 0; i < ObjJson.length(); i++) {
+                            JSONObject obj = ObjJson.getJSONObject(i);
+                            CategoryProduct categoryProduct = new CategoryProduct();
+                            categoryProduct.setId(obj.getInt("id"));
+                            if(obj.isNull("fullname")) categoryProduct.setFullname("");  else categoryProduct.setFullname(obj.getString("fullname"));
+                            categoryProduct.setStatus(0);
+                            categoryProduct.setType(obj.getInt("type"));
+                            categoryProduct.setOrden(obj.getInt("orden"));
+                            if(obj.isNull("created_at")) categoryProduct.setCreated_at("");  else categoryProduct.setCreated_at(obj.getString("created_at"));
+                            if(obj.isNull("updated_at")) categoryProduct.setUpdated_at("");  else categoryProduct.setUpdated_at(obj.getString("updated_at"));
+                            categoryProducts.add(i,categoryProduct);
+                        }
+                    }
+                    Log.d(LOG_TAG, "Ingresado correctamente");
+                }else{
+                    Log.d(LOG_TAG, "No se ingreso el registro");
+                    //return false;
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            // return false;
+        }
+        return  categoryProducts;
+
     }
 }

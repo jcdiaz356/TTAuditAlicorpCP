@@ -212,12 +212,16 @@ public class PublicityDetailActivity extends AppCompatActivity {
         publicityStore      = (PublicityStore)  publicityStoreRepo.findById(publicity_store_id);
         publicity_id        = publicityStore.getPublicity_id();
 
-
-        Picasso.with(activity)
+        Picasso.get()
                 .load(publicityStore.getImage())
                 .placeholder(R.drawable.loading_image)
                 .error(R.drawable.thumbs_ttaudit)
                 .into(imgPublicity);
+//        Picasso.with(activity)
+//                .load(publicityStore.getImage())
+//                .placeholder(R.drawable.loading_image)
+//                .error(R.drawable.thumbs_ttaudit)
+//                .into(imgPublicity);
 
         poll.setId(0);
         poll.setCategory_product_id(category_product_id);

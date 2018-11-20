@@ -8,11 +8,13 @@ import android.util.Log;
 import com.dataservicios.ttauditalicorpcp.db.DatabaseManager;
 import com.dataservicios.ttauditalicorpcp.services.UpdateService;
 
+//import net.gotev.uploadservice.BuildConfig;
+//import net.gotev.uploadservice.UploadService;
+
 
 public class AppController extends Application {
 
 	public static final String TAG = AppController.class.getSimpleName();
-
 	private boolean serviceRunningFlag;
 
 	private static AppController mInstance;
@@ -22,7 +24,10 @@ public class AppController extends Application {
 		super.onCreate();
 		DatabaseManager.init(this);
 		Log.d(TAG, "onCreated");
+
+//		INICIO DE SERVICIO SUBIDA DE FOTOS
 		startService(new Intent(this, UpdateService.class));
+
 //		startService(new Intent(this, MonitoGPSServices.class));
 		mInstance = this;
 	}

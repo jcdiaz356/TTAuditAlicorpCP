@@ -173,5 +173,16 @@ public class ProductRepo implements Crud {
         return wishList;
     }
 
+    public List<Product> findByCategoryProductId(int category_product_id) {
+
+        List<Product> wishList = null;
+        try {
+            wishList = helper.getProductDao().queryBuilder().where().eq("category_product_id",category_product_id).query();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return wishList;
+    }
+
 
 }

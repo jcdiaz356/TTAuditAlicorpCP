@@ -402,8 +402,13 @@ public class PollPublicityActivity extends AppCompatActivity {
         if(poll.getCategory_product_id() == 54) {
 
             switch (orderPoll) {
-                case 3: case 4:case 5: case 6: case 7: case 11:case 12:
+                case 3: case 5: case 6: case 7: case 11:case 12:
                     if (!AuditUtil.insertPollDetail(pollDetail)) return false;
+                    //if(!AuditUtil.saveSODBodegaAlicorp(company_id,pollDetail.getPoll_id(),pollDetail.getStore_id(),audit_id,auditRoadStore.getAudit_id(),user_id,publicity_id, pollDetail.getResult())) return false;
+                    break;
+                case 4:
+                    //if (!AuditUtil.insertPollDetail(pollDetail)) return false;
+                    if(!AuditUtil.saveSODBodegaAlicorp(company_id,pollDetail.getPoll_id(),pollDetail.getStore_id(),audit_id,auditRoadStore.getAudit_id(),user_id,publicity_id, pollDetail.getResult())) return false;
                     break;
                 default:
                     if (!AuditUtil.insertPollDetail(pollDetail)) return false;

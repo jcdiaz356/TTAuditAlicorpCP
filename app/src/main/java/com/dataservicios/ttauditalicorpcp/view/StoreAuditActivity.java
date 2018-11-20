@@ -25,6 +25,7 @@ import com.dataservicios.ttauditalicorpcp.R;
 import com.dataservicios.ttauditalicorpcp.db.DatabaseManager;
 import com.dataservicios.ttauditalicorpcp.model.Audit;
 import com.dataservicios.ttauditalicorpcp.model.AuditRoadStore;
+import com.dataservicios.ttauditalicorpcp.model.CategoryProduct;
 import com.dataservicios.ttauditalicorpcp.model.Company;
 import com.dataservicios.ttauditalicorpcp.model.Poll;
 import com.dataservicios.ttauditalicorpcp.model.Product;
@@ -34,6 +35,7 @@ import com.dataservicios.ttauditalicorpcp.model.RouteStoreTime;
 import com.dataservicios.ttauditalicorpcp.model.Store;
 import com.dataservicios.ttauditalicorpcp.repo.AuditRepo;
 import com.dataservicios.ttauditalicorpcp.repo.AuditRoadStoreRepo;
+import com.dataservicios.ttauditalicorpcp.repo.CategoryProductRepo;
 import com.dataservicios.ttauditalicorpcp.repo.CompanyRepo;
 import com.dataservicios.ttauditalicorpcp.repo.ProductRepo;
 import com.dataservicios.ttauditalicorpcp.repo.PublicityStoreRepo;
@@ -319,17 +321,50 @@ public class StoreAuditActivity extends AppCompatActivity implements OnMapReadyC
                         Audit audit = (Audit) auditRepo.findById(audit_id);
                         audit.getCompany_audit_id();
 
-                        ArrayList<Product> products = (ArrayList<Product>) productRepo.findAll();
-                        for(Product p: products){
-                            p.setStatus(0);
-                            productRepo.update(p);
-                        }
+//                        ArrayList<Product> products = (ArrayList<Product>) productRepo.findAll();
+//                        for(Product p: products){
+//                            p.setStatus(0);
+//                            productRepo.update(p);
+//                        }
 
 
                         Poll poll = new Poll();
                         poll.setOrder(1);
                         PollActivity.createInstance((Activity) activity, store_id,audit_id,poll);
+                    }  else if(audit_id == 77) {
+                        AuditRepo auditRepo = new AuditRepo(activity);
+                        Audit audit = (Audit) auditRepo.findById(audit_id);
+                        audit.getCompany_audit_id();
+
+                        CategoryProductRepo categoryProductRepo = new CategoryProductRepo(activity);
+                        ArrayList<CategoryProduct> categoryProducts = (ArrayList<CategoryProduct>) categoryProductRepo.findAll();
+                        for (CategoryProduct m:categoryProducts){
+                            m.setStatus(0);
+
+                            categoryProductRepo.update(m);
+                        }
+                        ProductRepo productRepo = new ProductRepo(activity);
+                        ArrayList<Product> products = (ArrayList<Product>) productRepo.findAll();
+                        for (Product p : products) {
+                            p.setStatus(0);
+                            productRepo.update(p);
+                        }
+
+//                        Poll poll = new Poll();
+//                        poll.setOrder(1);
+//                        PollActivity.createInstance((Activity) activity, store_id,audit_id,poll);
+
+
+                        Bundle bundle = new Bundle();
+                        bundle.putInt("store_id",store_id);
+                        bundle.putInt("audit_id",audit_id);
+
+                        Intent intent = new Intent(activity, CategoryProductActivity.class);
+                        intent.putExtras(bundle);
+                        startActivity(intent);
+                        //finish();
                     }
+
 
 
                 }

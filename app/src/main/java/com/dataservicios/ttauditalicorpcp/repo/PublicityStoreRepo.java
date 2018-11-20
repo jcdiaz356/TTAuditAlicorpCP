@@ -11,7 +11,6 @@ import java.util.List;
 
 public class PublicityStoreRepo implements Crud {
     private DatabaseHelper helper;
-
     public PublicityStoreRepo(Context context) {
 
         DatabaseManager.init(context);
@@ -179,6 +178,5 @@ public class PublicityStoreRepo implements Crud {
         }
         return wishList;
     }
-
 
 }

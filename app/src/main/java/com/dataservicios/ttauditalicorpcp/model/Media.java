@@ -29,6 +29,10 @@ public class Media {
     @DatabaseField
     private String file ;
     @DatabaseField
+    private String log ;
+    @DatabaseField
+    private int status_send ;
+    @DatabaseField
     private String created_at;
 
     public int getId() {
@@ -127,5 +131,19 @@ public class Media {
         this.created_at = created_at;
     }
 
+    public String getLog() {
+        return log;
+    }
 
+    public void setLog(String log) {
+        this.log = log;
+    }
+
+    public int getStatus_send() {
+        return status_send;
+    }
+
+    public void setStatus_send(int status_send) {
+        this.status_send = status_send;
+    }
 }

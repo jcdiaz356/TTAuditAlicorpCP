@@ -9,6 +9,7 @@ import android.util.Log;
 import com.dataservicios.ttauditalicorpcp.model.AssistControl;
 import com.dataservicios.ttauditalicorpcp.model.Audit;
 import com.dataservicios.ttauditalicorpcp.model.AuditRoadStore;
+import com.dataservicios.ttauditalicorpcp.model.CategoryProduct;
 import com.dataservicios.ttauditalicorpcp.model.Company;
 import com.dataservicios.ttauditalicorpcp.model.Departament;
 import com.dataservicios.ttauditalicorpcp.model.District;
@@ -40,7 +41,7 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
 	// name of the database file for your application -- change to something appropriate for your app
 	private static final String DATABASE_NAME = "db_alicorpcp";
 	// any time you make changes to your database objects, you may have to increase the database version
-	private static final int DATABASE_VERSION = 5;
+	private static final int DATABASE_VERSION = 6;
     private Context myContext;
 	// the DAO object we use to access the SimpleData table
     //pressure
@@ -60,6 +61,7 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
 	private Dao<ImageTemp, Integer>             ImageTempDao        = null;
     private Dao<Product, Integer>               ProductDao          = null;
     private Dao<PublicityStore, Integer>        PublicityStoreDao   = null;
+    private Dao<CategoryProduct, Integer>       CategoryProductDao  = null;
 
 
 	public DatabaseHelper(Context context) {
@@ -87,6 +89,7 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
 			TableUtils.createTable(connectionSource, ImageTemp.class            );
             TableUtils.createTable(connectionSource, Product.class              );
             TableUtils.createTable(connectionSource, PublicityStore.class       );
+            TableUtils.createTable(connectionSource, CategoryProduct.class      );
 
 
             Log.i(LOG_TAG, "execute method onCreate: Can't create Tables");
@@ -133,6 +136,7 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
             TableUtils.dropTable(connectionSource, ImageTemp.class,true     );
             TableUtils.dropTable(connectionSource, Product.class,true       );
             TableUtils.dropTable(connectionSource, PublicityStore.class,true );
+            TableUtils.dropTable(connectionSource, CategoryProduct.class,true           );
             onCreate(db,connectionSource);
 
             Log.i(LOG_TAG, "execute method onUpgrade: drop Tables");
@@ -318,6 +322,17 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
             }
         }
         return PublicityStoreDao;
+    }
+
+    public Dao<CategoryProduct, Integer> getCategoryProductDao() {
+        if (null == CategoryProductDao) {
+            try {
+                CategoryProductDao = getDao(CategoryProduct.class);
+            }catch (java.sql.SQLException e) {
+                e.printStackTrace();
+            }
+        }
+        return CategoryProductDao;
     }
 
 

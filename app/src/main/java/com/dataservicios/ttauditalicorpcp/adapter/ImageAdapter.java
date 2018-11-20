@@ -13,7 +13,9 @@ import android.widget.CheckBox;
 import android.widget.ImageView;
 
 import com.dataservicios.ttauditalicorpcp.R;
+import com.squareup.picasso.Picasso;
 
+import java.io.File;
 import java.util.ArrayList;
 
 /**
@@ -59,13 +61,26 @@ public class ImageAdapter extends BaseAdapter {
             holder = (ViewHolder) convertView.getTag();
         }
 
-        BitmapFactory.Options options = new BitmapFactory.Options();
-        options.inSampleSize = 8;
-        Bitmap myBitmap = BitmapFactory.decodeFile(f.get(position), options);
-        Matrix matrix = new Matrix();
-        matrix.postRotate(0);
-        Bitmap myBitmap1 =  Bitmap.createBitmap(myBitmap, 0, 0, myBitmap.getWidth(), myBitmap.getHeight(), matrix, true);
-        holder.imageview.setImageBitmap(myBitmap1);
+//        BitmapFactory.Options options = new BitmapFactory.Options();
+//        options.inSampleSize = 8;
+//        Bitmap myBitmap = BitmapFactory.decodeFile(f.get(position), options);
+//        Matrix matrix = new Matrix();
+//        matrix.postRotate(0);
+//        Bitmap myBitmap1 =  Bitmap.createBitmap(myBitmap, 0, 0, myBitmap.getWidth(), myBitmap.getHeight(), matrix, true);
+        String pathFile = f.get(position) ;
+        File imgFile = new File(pathFile);
+//        Picasso.with(activity)
+//                .load(imgFile)
+//                .error(R.drawable.avataruser)
+//                .into(holder.imageview);
+        Picasso.get()
+                .load(imgFile)
+                .resize(200, 200)
+                .centerCrop()
+                .error(R.drawable.thumbs_ttaudit)
+                .into(holder.imageview);
+
+//        holder.imageview.setImageBitmap(myBitmap1);
         holders.add(holder);
         return convertView;
     }

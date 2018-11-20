@@ -19,6 +19,8 @@ public class AuditRoadStore {
     private int auditStatus;
     @DatabaseField(foreign=true,foreignAutoRefresh=true)
     private Audit list;
+    @DatabaseField
+    private int order;
 
     public int getId() {
         return id;
@@ -66,5 +68,13 @@ public class AuditRoadStore {
 
     public void setList(Audit list) {
         this.list = list;
+    }
+
+    public int getOrder() {
+        return order;
+    }
+
+    public void setOrder(int order) {
+        this.order = order;
     }
 }

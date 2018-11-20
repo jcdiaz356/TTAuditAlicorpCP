@@ -36,6 +36,7 @@ import com.dataservicios.ttauditalicorpcp.model.NavDrawerItem;
 import com.dataservicios.ttauditalicorpcp.model.PublicityStore;
 import com.dataservicios.ttauditalicorpcp.model.User;
 import com.dataservicios.ttauditalicorpcp.repo.AuditRepo;
+import com.dataservicios.ttauditalicorpcp.repo.CategoryProductRepo;
 import com.dataservicios.ttauditalicorpcp.repo.CompanyRepo;
 import com.dataservicios.ttauditalicorpcp.repo.MediaRepo;
 import com.dataservicios.ttauditalicorpcp.repo.PollOptionRepo;
@@ -82,6 +83,7 @@ public class PanelAdminActivity extends AppCompatActivity {
     private CompanyRepo                 companyRepo;
     private PollRepo                    pollRepo;
     private PollOptionRepo              pollOptionRepo;
+    private CategoryProductRepo         categoryProductRepo;
     private ProductRepo                 productRepo;
     private PublicityStoreRepo          publicityStoreRepo;
     private AuditRepo                   auditRepo;
@@ -123,6 +125,7 @@ public class PanelAdminActivity extends AppCompatActivity {
         auditRepo           = new AuditRepo(activity);
         productRepo         = new ProductRepo(activity);
         publicityStoreRepo  = new PublicityStoreRepo(activity);
+        categoryProductRepo = new CategoryProductRepo(activity);
 
         Company company = (Company) companyRepo.findFirstReg();
 
@@ -133,11 +136,15 @@ public class PanelAdminActivity extends AppCompatActivity {
 
         tvUser.setText(user.getEmail());
         tvCampaign.setText(company.getFullname());
-
-        Picasso.with(activity)
+        Picasso.get()
                 .load(GlobalConstant.URL_USER_IMAGES + user.getImage())
-                .error(R.drawable.avataruser)
+                .placeholder(R.drawable.loading_image)
+                .error(R.drawable.thumbs_ttaudit)
                 .into(imcPhoto);
+//        Picasso.with(activity)
+//                .load(GlobalConstant.URL_USER_IMAGES + user.getImage())
+//                .error(R.drawable.avataruser)
+//                .into(imcPhoto);
 
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
@@ -329,6 +336,7 @@ public class PanelAdminActivity extends AppCompatActivity {
         public void onItemClick(AdapterView<?> parent, View view, int position,
                                 long id) {
             // display view for selected nav drawer item
+
             displayView(position);
         }
     }
@@ -339,6 +347,7 @@ public class PanelAdminActivity extends AppCompatActivity {
         AlertDialog.Builder builder = new AlertDialog.Builder(activity);
         switch (position) {
             case 0:
+
                 fragment = new RouteFragment();
 
                 break;
@@ -398,6 +407,7 @@ public class PanelAdminActivity extends AppCompatActivity {
                 break;
 
             case 3:
+
                 fragment = new MediasFragment();
                 break;
             case 4:
@@ -458,6 +468,7 @@ public class PanelAdminActivity extends AppCompatActivity {
                         auditRepo.deleteAll();
                         productRepo.deleteAll();
                         publicityStoreRepo.deleteAll();
+                        categoryProductRepo.deleteAll();
 
                         Intent intent = new Intent(activity,MainActivity.class);
                         startActivity(intent);
@@ -491,6 +502,8 @@ public class PanelAdminActivity extends AppCompatActivity {
 
         if (fragment != null) {
 
+
+            getSupportFragmentManager().beginTransaction().remove(fragment).commit();
             getSupportFragmentManager().beginTransaction().replace(R.id.frame_container, fragment)
                     .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE)
                     .addToBackStack(null).commit();
@@ -526,6 +539,7 @@ public class PanelAdminActivity extends AppCompatActivity {
         super.onConfigurationChanged(newConfig);
         // Pass any configuration change to the drawer toggls
         mDrawerToggle.onConfigurationChanged(newConfig);
+
     }
 
     @Override

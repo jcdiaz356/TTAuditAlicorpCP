@@ -92,7 +92,7 @@ public class PollActivity extends AppCompatActivity {
     private ProductRepo             productRepo;
 
     private GPSTracker              gpsTracker;
-    private ArrayList<PollOption> pollOptions;
+    private ArrayList<PollOption>   pollOptions;
     private int                     isYesNo;
     private String comment;
     private String selectedOptions;
@@ -188,12 +188,12 @@ public class PollActivity extends AppCompatActivity {
         lyOptionComment     = (LinearLayout)findViewById(R.id.lyOptionComment);
         imgShared           = (ImageButton) findViewById(R.id.imgShared);
 
-        store               = (Store)           storeRepo.findById(store_id);
-        route               = (Route)           routeRepo.findById(store.getRoute_id());
-        auditRoadStore      = (AuditRoadStore)  auditRoadStoreRepo.findByStoreIdAndAuditId(store_id,audit_id);
-        poll                = (Poll)            pollRepo.findByCompanyAuditIdAndOrder(auditRoadStore.getList().getCompany_audit_id(),orderPoll);
-        product             = (Product)         productRepo.findById(product_id);
-        pollOptions         = (ArrayList<PollOption>) pollOptionRepo.findByPollId(poll.getId());
+        store               = (Store)                   storeRepo.findById(store_id);
+        route               = (Route)                   routeRepo.findById(store.getRoute_id());
+        auditRoadStore      = (AuditRoadStore)          auditRoadStoreRepo.findByStoreIdAndAuditId(store_id,audit_id);
+        poll                = (Poll)                    pollRepo.findByCompanyAuditIdAndOrder(auditRoadStore.getList().getCompany_audit_id(),orderPoll);
+        product             = (Product)                 productRepo.findById(product_id);
+        pollOptions         = (ArrayList<PollOption>)   pollOptionRepo.findByPollId(poll.getId());
 
         poll.setCategory_product_id(category_product_id);
         poll.setProduct_id(product_id);
@@ -339,6 +339,7 @@ public class PollActivity extends AppCompatActivity {
         media.setProduct_id(product_id);
         media.setType(1);
         AndroidCustomGalleryActivity.createInstance((Activity) activity, media);
+//         GaleryImagesActivity.createInstance((Activity) activity, media);
     }
 
 

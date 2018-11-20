@@ -60,8 +60,8 @@ public class JSONParserX {
 
                 conn.setRequestProperty("Accept-Charset", charset);
 
-                conn.setReadTimeout(20000);
-                conn.setConnectTimeout(25000);
+                conn.setReadTimeout(30000);
+                conn.setConnectTimeout(30000);
 
                 conn.connect();
 
@@ -87,15 +87,10 @@ public class JSONParserX {
                 urlObj = new URL(url);
 
                 conn = (HttpURLConnection) urlObj.openConnection();
-
                 conn.setDoOutput(false);
-
                 conn.setRequestMethod("GET");
-
                 conn.setRequestProperty("Accept-Charset", charset);
-
                 conn.setConnectTimeout(15000);
-
                 conn.connect();
 
             } catch (IOException e) {

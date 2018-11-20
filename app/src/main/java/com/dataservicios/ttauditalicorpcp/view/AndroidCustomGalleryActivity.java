@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
@@ -42,6 +43,8 @@ import java.io.OutputStream;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+
+import id.zelory.compressor.Compressor;
 
 
 /**
@@ -187,8 +190,12 @@ public class AndroidCustomGalleryActivity extends AppCompatActivity {
                                     names_file.add(name);
                                     //  holder_counter++;
                                     try {
-                                        copyFile(BitmapLoader.getAlbumDir(activity) + "/" + listFile[i].getName(), BitmapLoader.getAlbumDirTemp(activity).getAbsolutePath() + "/" + listFile[i].getName());
-                                        copyFile(BitmapLoader.getAlbumDir(activity) + "/" + listFile[i].getName(), BitmapLoader.getAlbumDirBackup(activity) + "/" + listFile[i].getName());
+                                        //copyFile(BitmapLoader.getAlbumDir(activity) + "/" + listFile[i].getName(), BitmapLoader.getAlbumDirTemp(activity).getAbsolutePath() + "/" + listFile[i].getName());
+                                        //copyFile(BitmapLoader.getAlbumDir(activity) + "/" + listFile[i].getName(), BitmapLoader.getAlbumDirBackup(activity) + "/" + listFile[i].getName());
+
+                                        compresFileDestinationtion(BitmapLoader.getAlbumDirBackup(activity).getAbsolutePath(),listFile[i]);
+                                        compresFileDestinationtion(BitmapLoader.getAlbumDirTemp(activity).getAbsolutePath(),listFile[i]);
+
                                     } catch (IOException e) {
                                         e.printStackTrace();
                                     }
@@ -381,5 +388,16 @@ public class AndroidCustomGalleryActivity extends AppCompatActivity {
 
         builder.show();
 
+    }
+
+    public void compresFileDestinationtion(String destinationDirectory,File file ) throws IOException {
+
+        new Compressor(activity)
+                .setMaxWidth(640)
+                .setMaxHeight(480)
+                .setQuality(75)
+                .setCompressFormat(Bitmap.CompressFormat.JPEG)
+                .setDestinationDirectoryPath(destinationDirectory )
+                .compressToFile(file);
     }
 }
