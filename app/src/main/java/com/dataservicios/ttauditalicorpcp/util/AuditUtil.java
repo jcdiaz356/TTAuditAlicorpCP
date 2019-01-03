@@ -184,6 +184,68 @@ public class AuditUtil {
         return result;
     }
 
+
+    public boolean insertDataImages(final Media media) {
+        boolean result = false;
+        HashMap<String, String> params = new HashMap<>();
+
+        File file = new File(BitmapLoader.getAlbumDirTemp(context).getAbsolutePath() + "/" + media.getFile());
+
+        // params.put("fotoUp"               ,  imgFile                                                            );
+        params.put("archivo"              ,  String.valueOf(media.getFile())                );
+        params.put("store_id"             ,  String.valueOf(media.getStore_id())              );
+        params.put("product_id"           ,  String.valueOf(media.getProduct_id())            );
+        params.put("poll_id"              ,  String.valueOf(media.getPoll_id())               );
+        params.put("publicities_id"       ,  String.valueOf(media.getPublicity_id())          );
+        params.put("category_product_id"  ,  String.valueOf(media.getCategory_product_id())   );
+        params.put("company_id"           ,  String.valueOf(media.getCompany_id())            );
+        params.put("tipo"                 ,  String.valueOf(media.getType())                  );
+        params.put("monto"                ,  String.valueOf(media.getMonto())                 );
+        params.put("razon_social"         ,  String.valueOf(media.getRazonSocial())           );
+        params.put("horaSistema"          ,  String.valueOf(media.getCreated_at())            );
+
+
+//        $product_id = Input::only('product_id');
+//        $poll_id = Input::only('poll_id');
+//        $store_id = Input::only('store_id');
+//        $publicities_id = Input::only('publicities_id');
+//        $tipo = Input::only('tipo');
+//        $archivo = Input::only('archivo');
+//        $company_id = Input::only('company_id');
+//        $monto = Input::only('monto');
+//        $razon_social = Input::only('razon_social');
+//        $category_product_id = Input::only('category_product_id');
+
+        // Solicitud sincrónica usando librería AndroidNetworking
+        ANRequest request = AndroidNetworking.upload(GlobalConstant.dominio + "/insertImagesMayorista")
+                .addMultipartParameter(params)
+                .build()
+                .setUploadProgressListener(new UploadProgressListener() {
+                    @Override
+                    public void onProgress(long bytesUploaded, long totalBytes) {
+                        // do anything with progress
+                    }
+                });
+
+        ANResponse<JSONObject> response = request.executeForJSONObject();
+
+        if (response.isSuccess()) {
+            JSONObject jsonObject = response.getResult();
+            Log.d(LOG_TAG, "response : " + jsonObject.toString());
+            Response okHttpResponse = response.getOkHttpResponse();
+            Log.d(LOG_TAG, "headers : " + okHttpResponse.headers().toString());
+            result = true;
+        } else {
+            ANError error = response.getError();
+            // Handle Error
+            result = false;
+        }
+
+        return result;
+    }
+
+
+
     /**
      * Cierra una Auditoría determinada, de una tienda determinada en su ruta
      * @param audit_id

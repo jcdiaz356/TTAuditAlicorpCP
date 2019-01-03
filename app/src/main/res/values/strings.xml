@@ -15,7 +15,7 @@
         <item>Registro de fotos</item>
         <item>Sincronizar Tiendas</item>
         <item>Reinicializar Campaña</item>
-        <item>Marcar Tarjeta</item>
+        <item>Crear Backup de BD</item>
     </string-array>
     <!-- Nav Drawer List Item Icons -->
     <!-- Keep them in order as the titles are in -->
@@ -26,7 +26,7 @@
         <item>@drawable/ic_menu_gallery</item>
         <item>@drawable/ic_menu_sync</item>
         <item>@drawable/ic_menu_sync</item>
-        <item>@drawable/ic_watch_later_black_24dp</item>
+        <item>@drawable/ic_menu_backup</item>
     </array>
     <string name="desc_list_item_icon">Item Icon</string>
 
@@ -198,6 +198,9 @@
     <string name="text_upload_photo_progress">Cargando foto ...</string>
     <string name="message_error_upload_file">No se pudo cargar la foto, vuelva a intetar</string>
     <string name="message_audit_categories">Tiene que auditar todas las categorias</string>
+    <string name="message_db_export_failed">La exportación de base de datos ha fallado</string>
+    <string name="message_db_export_succes">Se ha exportado con éxito la base de datos !</string>
+    <string name="message_db_exporting">Exportando base de datos ...</string>
 
 
 </resources>

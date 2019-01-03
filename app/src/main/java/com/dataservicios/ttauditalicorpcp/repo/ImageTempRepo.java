@@ -20,6 +20,7 @@ public class ImageTempRepo implements Crud {
 
         DatabaseManager.init(context);
         helper = DatabaseManager.getInstance().getHelper();
+
     }
 
     @Override

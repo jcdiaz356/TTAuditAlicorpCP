@@ -45,6 +45,7 @@ import com.dataservicios.ttauditalicorpcp.repo.ProductRepo;
 import com.dataservicios.ttauditalicorpcp.repo.PublicityStoreRepo;
 import com.dataservicios.ttauditalicorpcp.repo.UserRepo;
 import com.dataservicios.ttauditalicorpcp.util.BitmapLoader;
+import com.dataservicios.ttauditalicorpcp.util.ExportDatabaseFileTask;
 import com.dataservicios.ttauditalicorpcp.util.GPSTracker;
 import com.dataservicios.ttauditalicorpcp.util.GlobalConstant;
 import com.dataservicios.ttauditalicorpcp.util.SessionManager;
@@ -491,9 +492,10 @@ public class PanelAdminActivity extends AppCompatActivity {
             case 6:
 
 
-                        Intent intent = new Intent(activity,MarkCardActivity.class);
-                        startActivity(intent);
+//                        Intent intent = new Intent(activity,MarkCardActivity.class);
+//                        startActivity(intent);
 
+                        new ExportDatabaseFileTask(activity).execute("");
                 break;
 
             default:

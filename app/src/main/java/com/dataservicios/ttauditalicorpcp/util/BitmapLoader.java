@@ -125,6 +125,11 @@ public class BitmapLoader {
         return  GlobalConstant.ALBUN_NAME_BACKUP;
     }
 
+//    private static String getDataBaseNameBackup(Context context){
+//        //return  context.getString(R.string.album_name_backup);
+//        return  GlobalConstant.DATA_BASE_NAME_BACKUP;
+//    }
+
     public static File getAlbumDirTemp(Context context) {
 
         AlbumStorageDirFactory mAlbumStorageDirFactory = null;
@@ -207,6 +212,40 @@ public class BitmapLoader {
         if (Environment.MEDIA_MOUNTED.equals(Environment.getExternalStorageState())) {
 
             storageDir = mAlbumStorageDirFactory.getAlbumStorageDir(getAlbunNameBackup(context));
+
+            if (storageDir != null) {
+                if (! storageDir.mkdirs()) {
+                    if (! storageDir.exists()){
+                        Log.d(getAlbunNameBackup(context), "failed to create directory");
+                        return null;
+                    }
+                }
+            }
+
+        } else {
+            Log.v(String.valueOf(R.string.app_name), "External storage is not mounted READ/WRITE.");
+        }
+
+        return storageDir;
+    }
+
+    public static File getDataBaseDirBackup(Context context) {
+
+//        AlbumStorageDirFactory mAlbumStorageDirFactory = null;
+//
+//        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.FROYO) {
+//            mAlbumStorageDirFactory = new FroyoAlbumDirFactory();
+//        } else {
+//            mAlbumStorageDirFactory = new BaseAlbumDirFactory();
+//        }
+
+
+        File storageDir = null;
+
+        if (Environment.MEDIA_MOUNTED.equals(Environment.getExternalStorageState())) {
+
+            storageDir = new File(Environment.getExternalStorageDirectory() + "/" + GlobalConstant.DATA_BASE_DIR_NAME_BACKUP ) ;
+//            storageDir = mAlbumStorageDirFactory.getAlbumStorageDir(getAlbunNameBackup(context));
 
             if (storageDir != null) {
                 if (! storageDir.mkdirs()) {

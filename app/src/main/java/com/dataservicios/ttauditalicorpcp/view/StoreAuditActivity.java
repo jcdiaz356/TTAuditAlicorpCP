@@ -257,6 +257,11 @@ public class StoreAuditActivity extends AppCompatActivity implements OnMapReadyC
             }
             lyContentButtons.addView(buttonArray[i]);
 
+//            Restrición , esta auditoría solo se mostrara para bodegas
+            if (ar.getAudit_id()== 77 && store.getType().equals("Puesto de Mercado") ){
+                buttonArray[i].setVisibility(View.GONE);
+            }
+
             buttonArray[i].setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -332,6 +337,9 @@ public class StoreAuditActivity extends AppCompatActivity implements OnMapReadyC
                         poll.setOrder(1);
                         PollActivity.createInstance((Activity) activity, store_id,audit_id,poll);
                     }  else if(audit_id == 77) {
+
+
+
                         AuditRepo auditRepo = new AuditRepo(activity);
                         Audit audit = (Audit) auditRepo.findById(audit_id);
                         audit.getCompany_audit_id();
