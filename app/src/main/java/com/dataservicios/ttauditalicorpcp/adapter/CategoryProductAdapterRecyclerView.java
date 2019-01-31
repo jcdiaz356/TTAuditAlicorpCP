@@ -55,11 +55,12 @@ public class CategoryProductAdapterRecyclerView extends RecyclerView.Adapter<Cat
         final CategoryProduct categoryProduct = categoryProducts.get(position);
 
         holder.tvFullName.setText(categoryProduct.getFullname());
-        Picasso.get()
-                .load(categoryProduct.getImagen())
-                .placeholder(R.drawable.loading_image)
-                .error(R.drawable.thumbs_ttaudit)
-                .into(holder.imgPhoto);
+
+//        Picasso.get()
+//                .load(categoryProduct.getImagen())
+//                .placeholder(R.drawable.loading_image)
+//                .error(R.drawable.thumbs_ttaudit)
+//                .into(holder.imgPhoto);
 
         if(categoryProduct.getStatus() == 0){
             holder.imgStatus.setVisibility(View.INVISIBLE);

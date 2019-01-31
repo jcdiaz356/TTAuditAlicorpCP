@@ -5,51 +5,103 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:fitsSystemWindows="true"
-    tools:context="com.dataservicios.ttauditbayermercaderismo.view.StoreAuditActivity">
+    tools:context="com.dataservicios.ttauditalicorpcp.view.StoreAuditActivity">
 
     <include layout="@layout/actionbar_toolbar"/>
-    <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-        android:layout_width="fill_parent"
-        android:layout_height="fill_parent"
+    <LinearLayout
         android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
         app:layout_behavior="@string/appbar_scrolling_view_behavior"
         >
-        <GridView
-        android:id="@+id/PhoneImageGrid"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:gravity="center"
-        android:horizontalSpacing="4dip"
-        android:numColumns="3"
-        android:stretchMode="columnWidth"
-        android:verticalSpacing="4dip"
-        android:padding="4dip"
-        android:focusableInTouchMode="false" />
+
+
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_alignParentBottom="true"
-            android:layout_centerHorizontal="true"
-            android:orientation="horizontal" >
-            <Button
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:theme="@style/RaisedButtonDark"
-                android:text="TOMAR FOTO"
-                android:drawableLeft="@drawable/ic_action_camera_white"
-                android:layout_weight="0.5"
-                android:id="@+id/take_photo" />
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            android:paddingLeft="@dimen/activity_horizontal_margin"
+            android:paddingRight="@dimen/activity_horizontal_margin"
+            android:paddingTop="@dimen/cardview_min_margin"
+            >
 
-            <Button
-                android:layout_width="0dp"
+            <GridView
+                android:id="@+id/PhoneImageGrid"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="SUBIR FOTO"
-                android:theme="@style/RaisedButtonDark"
-                android:layout_weight="0.5"
-                android:drawableLeft="@drawable/ic_action_upload"
-                android:id="@+id/save_images" />
+                android:layout_weight="1"
+                android:gravity="center"
+                android:horizontalSpacing="4dip"
+                android:numColumns="3"
+                android:stretchMode="columnWidth"
+                android:verticalSpacing="4dip"
+                android:padding="4dip"
+                android:focusableInTouchMode="false" />
+            <!--<LinearLayout-->
+                <!--android:layout_width="match_parent"-->
+                <!--android:layout_height="wrap_content"-->
+                <!--android:orientation="horizontal">-->
+                <!--<Button-->
+                    <!--android:id="@+id/btSave"-->
+                    <!--android:layout_width="match_parent"-->
+                    <!--android:layout_height="wrap_content"-->
+                    <!--android:drawableLeft="@drawable/ic_action_exit"-->
+                    <!--android:text="@string/tex_finish"-->
+                    <!--android:theme="@style/ButtonCloseAudit" />-->
+                <!--<Button-->
+                    <!--android:id="@+id/btSave2"-->
+                    <!--android:layout_width="match_parent"-->
+                    <!--android:layout_height="wrap_content"-->
+                    <!--android:drawableLeft="@drawable/ic_action_exit"-->
+                    <!--android:text="@string/tex_finish"-->
+                    <!--android:theme="@style/ButtonCloseAudit" />-->
+            <!--</LinearLayout>-->
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentBottom="true"
+                    android:layout_centerHorizontal="true"
+                    android:orientation="horizontal" >
+
+                    <Button
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:theme="@style/RaisedButtonDark"
+                        android:text="ELIMINAR FOTO"
+                        android:textSize="10dp"
+                        android:drawableTop="@drawable/ic_operation_delete"
+                        android:layout_weight="1"
+                        android:id="@+id/btDeletePhoto" />
+                    <Button
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:theme="@style/RaisedButtonDark"
+                        android:text="TOMAR FOTO"
+                        android:textSize="10dp"
+                        android:drawableTop="@drawable/ic_operation_photo"
+                        android:layout_weight="1"
+                        android:id="@+id/take_photo" />
+
+                    <Button
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:text="SUBIR FOTO"
+                        android:theme="@style/RaisedButtonDark"
+                        android:layout_weight="1"
+                        android:textSize="10dp"
+                        android:drawableTop="@drawable/ic_operation_upload"
+                        android:id="@+id/save_images" />
+                </LinearLayout>
+            <!---->
+
         </LinearLayout>
 
-    </RelativeLayout>
+
+
+    </LinearLayout>
+
+
+
 
 </android.support.design.widget.CoordinatorLayout>

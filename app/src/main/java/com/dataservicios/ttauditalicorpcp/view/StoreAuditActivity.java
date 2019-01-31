@@ -71,7 +71,7 @@ public class StoreAuditActivity extends AppCompatActivity implements OnMapReadyC
     private Button btSaveGeo;
     private Button btcloseRouteStore;
     private ImageButton ibEditAddress;
-    private ImageButton imgAuditStore;
+//    private ImageButton imgAuditStore;
     private ImageButton imgShared;
     private int                     user_id;
     private int                     store_id;
@@ -97,10 +97,16 @@ public class StoreAuditActivity extends AppCompatActivity implements OnMapReadyC
 
         DatabaseManager.init(this);
 
+
+
         gpsTracker = new GPSTracker(activity);
         if(!gpsTracker.canGetLocation()){
             gpsTracker.showSettingsAlert();
         }
+
+
+
+
 
         Bundle bundle = getIntent().getExtras();
         store_id = bundle.getInt("store_id");
@@ -131,7 +137,7 @@ public class StoreAuditActivity extends AppCompatActivity implements OnMapReadyC
         btSaveGeo           = (Button)   findViewById(R.id.btSaveGeo);
         btcloseRouteStore   = (Button)   findViewById(R.id.btcloseRouteStore);
         ibEditAddress       = (ImageButton) findViewById(R.id.ibEditAddress);
-        imgAuditStore       = (ImageButton) findViewById(R.id.imgAuditStore);
+//        imgAuditStore       = (ImageButton) findViewById(R.id.imgAuditStore);
         imgShared           = (ImageButton) findViewById(R.id.imgShared);
 
 
@@ -161,34 +167,34 @@ public class StoreAuditActivity extends AppCompatActivity implements OnMapReadyC
             }
         });
 
-        imgAuditStore.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-
-                android.support.v7.app.AlertDialog.Builder builder  = new android.support.v7.app.AlertDialog.Builder(activity);
-                builder.setTitle(R.string.message_sync_audits_store);
-                builder.setMessage(R.string.message_sync_audits_store_information);
-                builder.setPositiveButton(R.string.yes, new DialogInterface.OnClickListener()
-                {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-
-                        new syncAuditRoadStore().execute();
-
-                        dialog.dismiss();
-                    }
-                });
-                builder.setNegativeButton(R.string.no, new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        dialog.dismiss();
-                    }
-                });
-                builder.show();
-                builder.setCancelable(false);
-
-            }
-        });
+//        imgAuditStore.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//
+//                android.support.v7.app.AlertDialog.Builder builder  = new android.support.v7.app.AlertDialog.Builder(activity);
+//                builder.setTitle(R.string.message_sync_audits_store);
+//                builder.setMessage(R.string.message_sync_audits_store_information);
+//                builder.setPositiveButton(R.string.yes, new DialogInterface.OnClickListener()
+//                {
+//                    @Override
+//                    public void onClick(DialogInterface dialog, int which) {
+//
+//                        new syncAuditRoadStore().execute();
+//
+//                        dialog.dismiss();
+//                    }
+//                });
+//                builder.setNegativeButton(R.string.no, new DialogInterface.OnClickListener() {
+//                    @Override
+//                    public void onClick(DialogInterface dialog, int which) {
+//                        dialog.dismiss();
+//                    }
+//                });
+//                builder.show();
+//                builder.setCancelable(false);
+//
+//            }
+//        });
 
         imgShared.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -265,7 +271,7 @@ public class StoreAuditActivity extends AppCompatActivity implements OnMapReadyC
             buttonArray[i].setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    Toast.makeText(activity,v.getTag().toString(), Toast.LENGTH_SHORT).show();
+                   // Toast.makeText(activity,v.getTag().toString(), Toast.LENGTH_SHORT).show();
 
                     int audit_id= Integer.valueOf(v.getTag().toString());
 
@@ -332,13 +338,10 @@ public class StoreAuditActivity extends AppCompatActivity implements OnMapReadyC
 //                            productRepo.update(p);
 //                        }
 
-
                         Poll poll = new Poll();
                         poll.setOrder(1);
                         PollActivity.createInstance((Activity) activity, store_id,audit_id,poll);
                     }  else if(audit_id == 77) {
-
-
 
                         AuditRepo auditRepo = new AuditRepo(activity);
                         Audit audit = (Audit) auditRepo.findById(audit_id);

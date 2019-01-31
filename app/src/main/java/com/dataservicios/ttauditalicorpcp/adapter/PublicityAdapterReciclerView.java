@@ -44,7 +44,6 @@ public class PublicityAdapterReciclerView extends RecyclerView.Adapter<Publicity
     @Override
     public PublicityViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext()).inflate(resource, parent, false);
-
         return new PublicityViewHolder(view) ;
     }
 
@@ -60,6 +59,16 @@ public class PublicityAdapterReciclerView extends RecyclerView.Adapter<Publicity
                 .placeholder(R.drawable.loading_image)
                 .error(R.drawable.thumbs_ttaudit)
                 .into(holder.imgPhoto);
+
+//        Picasso.get()
+//                .load(R.drawable.loading_image)
+//                .placeholder(R.drawable.loading_image)
+//                .resize(60, 70)
+//                .centerCrop()
+//                .error(R.drawable.thumbs_ttaudit)
+//                .noFade()
+//                .into(holder.imgPhoto);
+
 //        Picasso.with(activity)
 //                .load(publicityStore.getImage())
 //                .placeholder(R.drawable.loading_image)
@@ -102,7 +111,7 @@ public class PublicityAdapterReciclerView extends RecyclerView.Adapter<Publicity
 //                }
 
 
-                Toast.makeText(activity,String.valueOf(publicityStore.getId()) + " - " + String.valueOf(publicityStore.getPublicity_id()) + " - " + String.valueOf(publicityStore.getCategory_product_id()),Toast.LENGTH_LONG).show();
+              //  Toast.makeText(activity,String.valueOf(publicityStore.getId()) + " - " + String.valueOf(publicityStore.getPublicity_id()) + " - " + String.valueOf(publicityStore.getCategory_product_id()),Toast.LENGTH_LONG).show();
 
             }
         });

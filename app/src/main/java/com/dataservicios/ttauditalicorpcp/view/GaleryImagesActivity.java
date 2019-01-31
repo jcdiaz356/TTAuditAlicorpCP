@@ -122,14 +122,13 @@ public class GaleryImagesActivity extends AppCompatActivity {
                         startActivity(intent);
                         break;
                     case R.id.action_upload_photo:
-//                        Toast.makeText(activity, menuItem.getTitle().toString() , Toast.LENGTH_SHORT).show();
+
                         uploadDiles();
                         break;
                     case R.id.action_delete_photo:
                         deleteFileSdCard();
                         break;
                     case R.id.action_sharing_photo:
-//                        Toast.makeText(activity, menuItem.getTitle().toString() , Toast.LENGTH_SHORT).show();
                         sharingImageFromSdCard();
                         break;
                 }
@@ -318,7 +317,7 @@ public class GaleryImagesActivity extends AppCompatActivity {
                     {
                         contador ++;
                         // Log.d("Item "+String.valueOf(i), checkbox.getTag().toString());
-                        //Toast.makeText(activity,checkbox.getTag().toString() ,Toast.LENGTH_LONG).show();
+
                         if (  listFile[i].getName().substring(0,6).equals(String.format("%06d", media.getStore_id()) )) {
                             String name = listFile[i].getName();
                             names_file.add(name);

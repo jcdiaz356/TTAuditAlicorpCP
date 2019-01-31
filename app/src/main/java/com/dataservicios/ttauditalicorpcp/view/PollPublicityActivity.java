@@ -160,10 +160,10 @@ public class PollPublicityActivity extends AppCompatActivity {
         lyOptionComment     = (LinearLayout)findViewById(R.id.lyOptionComment);
         lyPublicity         = (LinearLayout) findViewById(R.id.lyPublicity);
         DatabaseManager.init(this);
-        gpsTracker = new GPSTracker(activity);
-        if(!gpsTracker.canGetLocation()){
-            gpsTracker.showSettingsAlert();
-        }
+//        gpsTracker = new GPSTracker(activity);
+//        if(!gpsTracker.canGetLocation()){
+//            gpsTracker.showSettingsAlert();
+//        }
 
         Bundle bundle = getIntent().getExtras();
         store_id            = bundle.getInt("store_id");

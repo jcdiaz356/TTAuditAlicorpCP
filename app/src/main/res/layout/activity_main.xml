@@ -6,7 +6,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:fitsSystemWindows="true"
-    tools:context="com.dataservicios.ttauditbayermercaderismo.MainActivity"
+    tools:context="com.dataservicios.ttauditalicorpcp.MainActivity"
     android:background="@color/colorPrimary"
     >
     <LinearLayout

@@ -115,9 +115,7 @@ public class StoresActivity extends AppCompatActivity {
                 int id = menuItem.getItemId();
                 switch (id) {
                     case R.id.action_location:
-                       // Toast.makeText(activity, menuItem.getTitle().toString() , Toast.LENGTH_SHORT).show();
-                        //                int route_id = store.getId();
-                        //Toast.makeText(activity, String.valueOf(route_id), Toast.LENGTH_SHORT).show();
+
                         Bundle bundle = new Bundle();
                         bundle.putInt("route_id", Integer.valueOf(route_id));
                         Intent intent = new Intent(activity,MapsRouteActivity.class);

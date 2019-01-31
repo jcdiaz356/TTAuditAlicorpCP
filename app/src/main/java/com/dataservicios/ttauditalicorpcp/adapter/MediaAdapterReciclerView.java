@@ -232,7 +232,7 @@ public class MediaAdapterReciclerView extends RecyclerView.Adapter<MediaAdapterR
                                         notifyItemRangeChanged(position,medias.size());
                                     }
                                 } catch (JSONException e) {
-                                    Toast.makeText(activity,activity.getString(R.string.message_error_upload_file),Toast.LENGTH_SHORT);
+                                    Toast.makeText(activity,activity.getString(R.string.message_error_upload_file),Toast.LENGTH_SHORT).show();
                                     e.printStackTrace();
                                 }
                             }
@@ -240,7 +240,8 @@ public class MediaAdapterReciclerView extends RecyclerView.Adapter<MediaAdapterR
                             public void onError(ANError error) {
                                 // handle error
                                 String err = error.getMessage().toString();
-                                Toast.makeText(activity, err,Toast.LENGTH_SHORT);
+                                Toast.makeText(activity,activity.getString(R.string.message_error_upload_file) + err,Toast.LENGTH_SHORT).show();
+//                                Toast.makeText(activity, err,Toast.LENGTH_SHORT);
                                 pDialog.dismiss();
                             }
                             @Override

@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:fitsSystemWindows="true"
-    tools:context="com.dataservicios.fotoapparatprueba.view.GaleryImagesActivity">
+    tools:context="com.dataservicios.ttauditalicorpcp.view.GaleryImagesActivity">
 
     <include layout="@layout/actionbar_toolbar"/>
     <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"

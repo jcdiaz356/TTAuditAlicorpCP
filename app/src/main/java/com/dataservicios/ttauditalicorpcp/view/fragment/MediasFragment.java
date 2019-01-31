@@ -15,7 +15,9 @@ import android.widget.Toast;
 import com.dataservicios.ttauditalicorpcp.R;
 import com.dataservicios.ttauditalicorpcp.adapter.MediaAdapterReciclerView;
 import com.dataservicios.ttauditalicorpcp.db.DatabaseManager;
+import com.dataservicios.ttauditalicorpcp.model.Company;
 import com.dataservicios.ttauditalicorpcp.model.Media;
+import com.dataservicios.ttauditalicorpcp.repo.CompanyRepo;
 import com.dataservicios.ttauditalicorpcp.repo.MediaRepo;
 import com.dataservicios.ttauditalicorpcp.services.UpdateService;
 import com.dataservicios.ttauditalicorpcp.util.SessionManager;
@@ -33,9 +35,12 @@ public class MediasFragment extends Fragment {
 
     private SessionManager              session;
     private int                         user_id;
+    private int                         company_id;
     private MediaAdapterReciclerView    mediaAdapterRecyclerView;
     private RecyclerView                mediaRecycler;
     private Media                       media;
+    private CompanyRepo                 companyRepo;
+    private Company                     company;
     private MediaRepo                   mediaRepo;
 
     public MediasFragment() {
@@ -51,12 +56,19 @@ public class MediasFragment extends Fragment {
 
         DatabaseManager.init(getActivity());
 
-        getActivity().stopService(new Intent(getActivity(), UpdateService.class));
-
-
+        //getActivity().stopService(new Intent(getActivity(), UpdateService.class));
 
         mediaRepo = new MediaRepo(getActivity());
-        ArrayList<Media> medias = (ArrayList<Media>) mediaRepo.findAll();
+        companyRepo = new CompanyRepo(getActivity());
+
+        ArrayList<Company> companies = (ArrayList<Company>) companyRepo.findAll();
+        for (Company c: companies){
+            company_id = c.getId();
+        }
+
+        mediaRepo = new MediaRepo(getActivity());
+//        ArrayList<Media> medias = (ArrayList<Media>) mediaRepo.findAll();
+        ArrayList<Media> medias = (ArrayList<Media>) mediaRepo.findByCompanyId(company_id);
 
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_medias, container, false);
@@ -103,7 +115,7 @@ public class MediasFragment extends Fragment {
     @Override
     public void onDestroy() {
 
-        getActivity().startService(new Intent(getActivity(), UpdateService.class));
+        // getActivity().startService(new Intent(getActivity(), UpdateService.class));
         super.onDestroy();
 
 

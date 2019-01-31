@@ -28,6 +28,7 @@ import org.apache.http.entity.mime.content.ByteArrayBody;
 import org.apache.http.entity.mime.content.ContentBody;
 import org.apache.http.entity.mime.content.StringBody;
 import org.json.JSONArray;
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.ByteArrayOutputStream;
@@ -173,8 +174,20 @@ public class AuditUtil {
             JSONObject jsonObject = response.getResult();
             Log.d(LOG_TAG, "response : " + jsonObject.toString());
             Response okHttpResponse = response.getOkHttpResponse();
+
             Log.d(LOG_TAG, "headers : " + okHttpResponse.headers().toString());
-            result = true;
+            int success;
+            try {
+                success = jsonObject.getInt("success");
+                if(success==1) {
+                    result = true;
+                } else {
+                    result = false;
+                }
+            } catch (JSONException e) {
+                e.printStackTrace();
+                result = false;
+            }
         } else {
             ANError error = response.getError();
             // Handle Error

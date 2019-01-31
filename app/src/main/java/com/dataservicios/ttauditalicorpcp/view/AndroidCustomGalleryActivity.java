@@ -1,6 +1,7 @@
 package com.dataservicios.ttauditalicorpcp.view;
 
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -35,16 +36,14 @@ import com.dataservicios.ttauditalicorpcp.util.GlobalConstant;
 import com.dataservicios.ttauditalicorpcp.util.MemoryUsage;
 
 import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 
 import id.zelory.compressor.Compressor;
+
+import static com.dataservicios.ttauditalicorpcp.util.BitmapLoader.copyFile;
 
 
 /**
@@ -57,12 +56,16 @@ public class AndroidCustomGalleryActivity extends AppCompatActivity {
     private String mCurrentPhotoPath;
     private AlbumStorageDirFactory  mAlbumStorageDirFactory = null;
     private ImageAdapter            imageAdapter;
-    private ArrayList<String> f = new ArrayList<String>();// list of file paths
-    private File[]                  listFile;
-    private ArrayList<String> names_file = new ArrayList<String>();
+    private ArrayList<String> fPath = new ArrayList<String>();// list of file paths
+    private File[] listFileAll;
+    private File[] listFileFiltered;
+    private ArrayList<File>    listFileSelected  = new  ArrayList<File>();
+    //private ArrayList<String> names_file = new ArrayList<String>();
     private Activity activity = (Activity) this;;
     private Media                   media;
+    private MediaRepo               mediaRepo;
     private CompanyRepo             companyRepo;
+    private Button btDeletePhoto;
 
 
     /**
@@ -116,10 +119,12 @@ public class AndroidCustomGalleryActivity extends AppCompatActivity {
         media.setRazonSocial(bundle.getString("razon_social"));
         media.setType(bundle.getInt("tipo"));
 
+        mediaRepo = new MediaRepo(activity);
+
         getFromSdcard();
 
         final GridView imagegrid = (GridView) findViewById(R.id.PhoneImageGrid);
-        imageAdapter = new ImageAdapter(activity,f);
+        imageAdapter = new ImageAdapter(activity,fPath);
         imagegrid.setAdapter(imageAdapter);
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.FROYO) {
@@ -130,6 +135,7 @@ public class AndroidCustomGalleryActivity extends AppCompatActivity {
 
         Button btn_photo = (Button)findViewById(R.id.take_photo);
         Button btn_upload = (Button)findViewById(R.id.save_images);
+        btDeletePhoto = (Button) findViewById(R.id.btDeletePhoto);
         // Register the onClick listener with the implementation above
         btn_photo.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v)
@@ -143,13 +149,10 @@ public class AndroidCustomGalleryActivity extends AppCompatActivity {
                 // to save picture remove comment
                 File file = new File(albumF,imageFileName+GlobalConstant.JPEG_FILE_SUFFIX);
                 Uri photoPath = Uri.fromFile(file);
-
                 //intent.putExtra(MediaStore.EXTRA_OUTPUT, photoPath);
-
                  mCurrentPhotoPath = BitmapLoader.getAlbumDir(activity).getAbsolutePath();
 //                // start camera activity
 //                startActivityForResult(intent, TAKE_PICTURE);
-
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
                     intent.setFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
                     Uri contentUri = FileProvider.getUriForFile(activity, "com.dataservicios.ttauditalicorpcp.fileProvider", file);
@@ -163,50 +166,71 @@ public class AndroidCustomGalleryActivity extends AppCompatActivity {
         });
 
         btn_upload.setOnClickListener(new View.OnClickListener() {
-            public void onClick(View v)
-            {
-                //File file= new File(Environment.getExternalStorageDirectory().toString()+"/Pictures/" + getAlbumName());
+            public void onClick(View v) {
+
                 File file= BitmapLoader.getAlbumDir(activity);
                 if (file.isDirectory()) {
-                    int position =0;
                     int contador = 0;
-                    int holder_counter=0;
-                    names_file.clear();
-                    if (listFile.length>0){
-                        //for (int i = 0; i < listFile.length; i++){
-                        int total = imageAdapter.getCount();
+                    //names_file.clear();
+                    if (listFileAll.length>0){
+
                         int count = imagegrid.getAdapter().getCount();
                         for (int i = 0; i < count; i++) {
                            // LinearLayout itemLayout = (LinearLayout)imagegrid.getChildAt(i); // Find by under LinearLayout
                             RelativeLayout itemLayout = (RelativeLayout)imagegrid.getChildAt(i); // Find by under LinearLayout
+
                             CheckBox checkbox = (CheckBox)itemLayout.findViewById(R.id.itemCheckBox);
                             if(checkbox.isChecked())
                             {
+                                String name = listFileAll[i].getName();
+                                //listFileSelected.add(listFileAll[i]);
                                 contador ++;
-                                // Log.d("Item "+String.valueOf(i), checkbox.getTag().toString());
-                                //Toast.makeText(activity,checkbox.getTag().toString() ,Toast.LENGTH_LONG).show();
-                                if (  listFile[i].getName().substring(0,6).equals(String.format("%06d", media.getStore_id()) )) {
-                                    String name = listFile[i].getName();
-                                    names_file.add(name);
-                                    //  holder_counter++;
                                     try {
-                                        //copyFile(BitmapLoader.getAlbumDir(activity) + "/" + listFile[i].getName(), BitmapLoader.getAlbumDirTemp(activity).getAbsolutePath() + "/" + listFile[i].getName());
-                                        //copyFile(BitmapLoader.getAlbumDir(activity) + "/" + listFile[i].getName(), BitmapLoader.getAlbumDirBackup(activity) + "/" + listFile[i].getName());
 
-                                        compresFileDestinationtion(BitmapLoader.getAlbumDirBackup(activity).getAbsolutePath(),listFile[i]);
-                                        compresFileDestinationtion(BitmapLoader.getAlbumDirTemp(activity).getAbsolutePath(),listFile[i]);
+                                        copyFile(BitmapLoader.getAlbumDir(activity) + "/" + listFileAll[i].getName(), BitmapLoader.getAlbumDirBackup(activity).getAbsolutePath() + "/" + listFileAll[i].getName());
+                                       // compresFileDestinationtion(BitmapLoader.getAlbumDirBackup(activity).getAbsolutePath(), listFileAll[i]);
+                                        compresFileDestinationtion(BitmapLoader.getAlbumDirTemp(activity).getAbsolutePath(), listFileAll[i]);
 
+                                        String created_at = new SimpleDateFormat("yyyy:MM:dd HH:mm:ss").format(new Date());
+                                        media.setCreated_at(created_at);
+                                        media.setFile(name);
+                                        mediaRepo.create(media);
+                                        listFileAll[i].delete();
                                     } catch (IOException e) {
                                         e.printStackTrace();
+                                        alertDialogBasico("No se pudo enviar la imagen intentelo nuevamente");
+                                        return;
                                     }
-                                }
-                                listFile[i].delete();
+
                             }
                         }
+
+//                        -----------PCOPIA Los ARCHIVOS AÑADIDOS con la selección del cheked-----------
+//                        ------------------------------------------------------------------------------
+//                        for ( File filesa: listFileSelected){
+//
+//                            try {
+//                                compresFileDestinationtion(BitmapLoader.getAlbumDirBackup(activity).getAbsolutePath(),filesa);
+//                                compresFileDestinationtion(BitmapLoader.getAlbumDirTemp(activity).getAbsolutePath(),filesa);
+//                                String created_at = new SimpleDateFormat("yyyy:MM:dd HH:mm:ss").format(new Date());
+//                                media.setCreated_at(created_at);
+//                                media.setFile(filesa.getName());
+//                                mediaRepo.create(media);
+//                                filesa.delete();
+//                            } catch (IOException e) {
+//                                e.printStackTrace();
+//                                alertDialogBasico("No se pudo enviar la imagen intentelo nuevamente");
+//                                return;
+//                            }
+//
+//                        }
+
+                        Log.i(LOG_TAG, listFileSelected.toString());
 
                         if(contador > 0){
 
                             Toast.makeText(activity, "Seleccionó " + String.valueOf(contador) + " imágenes", Toast.LENGTH_LONG).show();
+                            finish();
                         } else{
                             Toast.makeText(activity, R.string.message_selection_image, Toast.LENGTH_LONG).show();
                             return;
@@ -225,28 +249,78 @@ public class AndroidCustomGalleryActivity extends AppCompatActivity {
 
                 }
 
-                MediaRepo mediaRepo = new MediaRepo(activity);
-                for (int i = 0; i < names_file.size(); i++) {
-                    String foto = names_file.get(i);
-                    //String pathFile =getAlbumDirTemp().getAbsolutePath() + "/" + foto ;
-                    String created_at = new SimpleDateFormat("yyyy:MM:dd HH:mm:ss").format(new Date());
-                    media.setCreated_at(created_at);
-                    media.setFile(foto);
-                    mediaRepo.create(media);
+//                ArrayList<Media> medias = (ArrayList<Media>) mediaRepo.findAll();
+//                Log.d(LOG_TAG,medias.toString());
+//                finish();
+
+            }
+        });
+
+
+
+        btDeletePhoto.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                final int countFile = imagegrid.getAdapter().getCount();
+                int count = 0 ;
+                for (int i = 0; i < countFile; i++) {
+                    // LinearLayout itemLayout = (LinearLayout)imagegrid.getChildAt(i); // Find by under LinearLayout
+                    RelativeLayout itemLayout = (RelativeLayout)imagegrid.getChildAt(i); // Find by under LinearLayout
+                    CheckBox checkbox = (CheckBox)itemLayout.findViewById(R.id.itemCheckBox);
+                    if(checkbox.isChecked())
+                    {
+                        count ++;
+                    }
                 }
 
-                ArrayList<Media> medias = (ArrayList<Media>) mediaRepo.findAll();
-                Log.d(LOG_TAG,medias.toString());
-                finish();
+                if(count == 0){
+                    Toast.makeText(activity, R.string.message_selection_image, Toast.LENGTH_LONG).show();
+                    return;
+                }
 
+
+                AlertDialog.Builder builder = new AlertDialog.Builder(activity);
+                builder.setTitle(R.string.message_delete_file);
+                builder.setMessage(R.string.message_delete_file_information);
+                builder.setPositiveButton(R.string.yes, new DialogInterface.OnClickListener()
+                {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+
+                        for (int i = 0; i < countFile; i++) {
+                            // LinearLayout itemLayout = (LinearLayout)imagegrid.getChildAt(i); // Find by under LinearLayout
+                            RelativeLayout itemLayout = (RelativeLayout)imagegrid.getChildAt(i); // Find by under LinearLayout
+                            CheckBox checkbox = (CheckBox)itemLayout.findViewById(R.id.itemCheckBox);
+                            if(checkbox.isChecked())
+                            {
+                                String name = listFileAll[i].getName();
+                                //listFileSelected.add(listFileAll[i]);
+                                listFileAll[i].delete();
+                            }
+                            checkbox.setChecked(false);
+                        }
+                        getFromSdcard();
+                        // imageAdapter.
+                        imageAdapter.notifyDataSetChanged();
+
+                        dialog.dismiss();
+                    }
+                });
+                builder.setNegativeButton(R.string.no, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.dismiss();
+                    }
+                });
+                builder.show();
+                builder.setCancelable(false);
             }
         });
 
         // Pasando  megas el tamaño de la memoria libre
         long size = (long) (MemoryUsage.getAvailableInternalMemorySize()/ Math.pow(1024,2));
-
         //if(size < 1024) {
-        if(size < 10) {
+        if(size < 100) {
             alertDialogBasico(getString(R.string.message_title_avalible_internal_memory),getString(R.string.message_avalible_internal_memory));
         }
 
@@ -308,7 +382,6 @@ public class AndroidCustomGalleryActivity extends AppCompatActivity {
         Uri contentUri = Uri.fromFile(f);
         mediaScanIntent.setData(contentUri);
         this.sendBroadcast(mediaScanIntent);
-
     }
 
 
@@ -316,17 +389,19 @@ public class AndroidCustomGalleryActivity extends AppCompatActivity {
     {
 
         //File file= new File(Environment.getExternalStorageDirectory().toString()+ GlobalConstant.directory_images + getAlbumName());
+        fPath.clear();
         File file= BitmapLoader.getAlbumDir(activity);
         if (file.isDirectory())
         {
-            listFile = file.listFiles();
-            if (listFile != null){
-                for (int i = 0; i < listFile.length; i++)
+            listFileAll = file.listFiles();
+            if (listFileAll != null){
+                for (int i = 0; i < listFileAll.length; i++)
                 {
-                    if (  listFile[i].getName().substring(0,6).equals(String.format("%06d", media.getStore_id()) ))
-                    {
-                        f.add(listFile[i].getAbsolutePath());
-                    }
+//                    if (  listFileAll[i].getName().substring(0,6).equals(String.format("%06d", media.getStore_id()) ))
+//                    {
+                        fPath.add(listFileAll[i].getAbsolutePath());
+
+//                    }
 
                 }
             }
@@ -334,19 +409,7 @@ public class AndroidCustomGalleryActivity extends AppCompatActivity {
     }
 
 
-    public void copyFile(String selectedImagePath, String string) throws IOException {
-        InputStream in = new FileInputStream(selectedImagePath);
-        OutputStream out = new FileOutputStream(string);
 
-        // Transfer bytes from in to out
-        byte[] buf = new byte[1024];
-        int len;
-        while ((len = in.read(buf)) > 0) {
-            out.write(buf, 0, len);
-        }
-        in.close();
-        out.close();
-    }
 
     public void onBackPressed() {
         super.onBackPressed();
@@ -390,14 +453,35 @@ public class AndroidCustomGalleryActivity extends AppCompatActivity {
 
     }
 
-    public void compresFileDestinationtion(String destinationDirectory,File file ) throws IOException {
+
+
+    public void compresFileDestinationtion(String destinationDirectory, File file ) throws IOException {
 
         new Compressor(activity)
-                .setMaxWidth(640)
-                .setMaxHeight(480)
-                .setQuality(75)
+                .setMaxWidth(500)
+                .setMaxHeight(352)
+                .setQuality(60)
+
                 .setCompressFormat(Bitmap.CompressFormat.JPEG)
                 .setDestinationDirectoryPath(destinationDirectory )
                 .compressToFile(file);
     }
+
+
+    public void alertDialogBasico(String message) {
+
+        // 1. Instancia de AlertDialog.Builder con este constructor
+        android.support.v7.app.AlertDialog.Builder builder = new android.support.v7.app.AlertDialog.Builder(this);
+        // 2. Encadenar varios métodos setter para ajustar las características del diálogo
+        builder.setMessage(message);
+        builder.setCancelable(false);
+        builder.setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int id) {
+                System.exit(0);
+            }
+        });
+        builder.show();
+
+    }
+
 }

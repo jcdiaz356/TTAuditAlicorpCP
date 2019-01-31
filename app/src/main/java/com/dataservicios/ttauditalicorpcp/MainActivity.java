@@ -288,21 +288,18 @@ public class MainActivity extends AppCompatActivity {
                 if (company.getId() == 0) {
                     message = message.concat(activity.getString(R.string.message_no_get_company));
                     message = message.concat("\n");
-                    //Toast.makeText(activity, R.string.message_no_get_company, Toast.LENGTH_LONG).show();
+
                     //activity.finish();
 
                     //-------------------------------------------
                     //Creandd Publicity de prueba
                     //-------------------------------------------
 
-
-
-
                 }
                 if (audits == null) {
                     message = message.concat(activity.getString(R.string.message_no_get_audit));
                     message = message.concat("\n");
-                    //Toast.makeText(activity, R.string.message_no_get_audit, Toast.LENGTH_LONG).show();
+
                     //activity.finish();
                 }
                 alertDialogBasico(message);

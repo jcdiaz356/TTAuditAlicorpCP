@@ -76,9 +76,9 @@ public class RouteFragment extends Fragment {
 
 
         ArrayList<Route> routes = (ArrayList<Route>) routeRepo.findAll();
-        for (Route r: routes) {
-            routeRepo.create(r);
-        }
+//        for (Route r: routes) {
+//            routeRepo.create(r);
+//        }
 
         routeAdapterRecyclerView =  new RouteAdapterRecyclerView(routes, R.layout.cardview_router, getActivity());
         routeRecycler.setAdapter(routeAdapterRecyclerView);

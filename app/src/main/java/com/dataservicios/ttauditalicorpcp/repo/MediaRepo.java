@@ -141,4 +141,15 @@ public class MediaRepo implements Crud {
         return count;
     }
 
+
+    public List<Media> findByCompanyId(int company_id) {
+
+        List<Media> wishList = null;
+        try {
+            wishList = helper.getMediaDao().queryBuilder().where().eq("company_id",company_id).query();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return wishList;
+    }
 }

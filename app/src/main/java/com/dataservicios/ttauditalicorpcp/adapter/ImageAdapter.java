@@ -88,6 +88,7 @@ public class ImageAdapter extends BaseAdapter {
     public class  ViewHolder {
         public ImageView imageview;
         public CheckBox checkbox;
+
     }
 
 }

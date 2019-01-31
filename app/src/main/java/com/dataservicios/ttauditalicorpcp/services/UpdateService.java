@@ -63,7 +63,7 @@ public class UpdateService extends Service {
     public void onCreate() {
         super.onCreate();
         application = (AppController) getApplication();
-        updater = new Updater();
+        // updater = new Updater();
         mediaRepo = new MediaRepo(this);
         media = new Media();
         auditUtil = new AuditUtil(context);
@@ -76,8 +76,8 @@ public class UpdateService extends Service {
 
         runFlag = false;
         application.setServiceRunningFlag(false);
-        updater.interrupt();
-        updater = null;
+//        updater.interrupt();
+//        updater = null;
                 Log.d(LOG_TAG, "onDestroyed");
     }
 
@@ -86,7 +86,7 @@ public class UpdateService extends Service {
         if(!runFlag){
             runFlag = true;
             application.setServiceRunningFlag(true);
-            updater.start();
+//            updater.start();
         }
 
                 Log.d(LOG_TAG, "onStarted");

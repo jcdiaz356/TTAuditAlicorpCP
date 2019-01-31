@@ -8,6 +8,7 @@ import android.util.Log;
 import com.dataservicios.ttauditalicorpcp.db.DatabaseManager;
 import com.dataservicios.ttauditalicorpcp.services.UpdateService;
 
+
 //import net.gotev.uploadservice.BuildConfig;
 //import net.gotev.uploadservice.UploadService;
 
@@ -26,7 +27,7 @@ public class AppController extends Application {
 		Log.d(TAG, "onCreated");
 
 //		INICIO DE SERVICIO SUBIDA DE FOTOS
-		startService(new Intent(this, UpdateService.class));
+		//startService(new Intent(this, UpdateService.class));
 
 //		startService(new Intent(this, MonitoGPSServices.class));
 		mInstance = this;
@@ -46,7 +47,7 @@ public class AppController extends Application {
 	public void onTerminate() {
 		super.onTerminate();
 		Log.i(TAG, "onTerminated");
-		stopService(new Intent(this, UpdateService.class));
+		// stopService(new Intent(this, UpdateService.class));
 //		stopService(new Intent(this, MonitoGPSServices.class));
 	}
 }

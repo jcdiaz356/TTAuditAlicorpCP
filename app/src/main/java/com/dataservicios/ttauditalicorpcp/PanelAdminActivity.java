@@ -33,7 +33,6 @@ import com.dataservicios.ttauditalicorpcp.adapter.NavDrawerListAdapter;
 import com.dataservicios.ttauditalicorpcp.db.DatabaseManager;
 import com.dataservicios.ttauditalicorpcp.model.Company;
 import com.dataservicios.ttauditalicorpcp.model.NavDrawerItem;
-import com.dataservicios.ttauditalicorpcp.model.PublicityStore;
 import com.dataservicios.ttauditalicorpcp.model.User;
 import com.dataservicios.ttauditalicorpcp.repo.AuditRepo;
 import com.dataservicios.ttauditalicorpcp.repo.CategoryProductRepo;
@@ -107,10 +106,10 @@ public class PanelAdminActivity extends AppCompatActivity {
         setSupportActionBar(toolbar);
         activity = (Activity) this;
 
-        GPSTracker gpsTracker = new GPSTracker(activity);
-        if(!gpsTracker.canGetLocation()){
-            gpsTracker.showSettingsAlert();
-        }
+//        GPSTracker gpsTracker = new GPSTracker(activity);
+//        if(!gpsTracker.canGetLocation()){
+//            gpsTracker.showSettingsAlert();
+//        }
 
         session = new SessionManager(getApplicationContext());
         HashMap<String, String> userSesion = session.getUserDetails();
@@ -397,7 +396,7 @@ public class PanelAdminActivity extends AppCompatActivity {
                 } catch (Exception e) {
                     // TODO Auto-generated catch block
                     e.printStackTrace();
-                    Toast.makeText(activity,R.string.message_app_no_installing, Toast.LENGTH_LONG).show();
+                    //Toast.makeText(activity,R.string.message_app_no_installing, Toast.LENGTH_LONG).show();
                     Intent intent = new Intent(Intent.ACTION_VIEW);
                     intent.setData(Uri.parse("market://details?id=com.estrongs.android.pop&hl=es"));
                     startActivity(intent);

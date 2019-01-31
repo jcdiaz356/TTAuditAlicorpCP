@@ -49,10 +49,10 @@ public class StoreAdapterReciclerView extends RecyclerView.Adapter<StoreAdapterR
         this.resource   = resource;
         this.activity   = activity;
 
-        gpsTracker = new GPSTracker(activity);
-        if(!gpsTracker.canGetLocation()){
-            gpsTracker.showSettingsAlert();
-        }
+//        gpsTracker = new GPSTracker(activity);
+//        if(!gpsTracker.canGetLocation()){
+//            gpsTracker.showSettingsAlert();
+//        }
 
         DatabaseManager.init(activity);
         UserRepo    userRepo    = new UserRepo(activity);
@@ -114,13 +114,13 @@ public class StoreAdapterReciclerView extends RecyclerView.Adapter<StoreAdapterR
             @Override
             public void onClick(View v) {
 
-                double lat = gpsTracker.getLatitude();
-                double lon = gpsTracker.getLatitude();
+//                double lat = gpsTracker.getLatitude();
+//                double lon = gpsTracker.getLatitude();
 
-                if(gpsTracker.canGetLocation()){
-                    lat = gpsTracker.getLatitude();
-                    lon = gpsTracker.getLatitude();
-                }
+//                if(gpsTracker.canGetLocation()){
+//                    lat = gpsTracker.getLatitude();
+//                    lon = gpsTracker.getLatitude();
+//                }
 
                 String created_at = new SimpleDateFormat("yyyy:MM:dd HH:mm:ss").format(new Date());
                 RouteStoreTime routeStoreTime = new RouteStoreTime();
@@ -128,8 +128,10 @@ public class StoreAdapterReciclerView extends RecyclerView.Adapter<StoreAdapterR
                 routeStoreTime.setStore_id(store.getId());
                 routeStoreTime.setRoute_id(store.getRoute_id());
                 routeStoreTime.setUser_id(user.getId());
-                routeStoreTime.setLat_open(lat);
-                routeStoreTime.setLon_open(lon);
+                routeStoreTime.setLat_open(0);
+//                routeStoreTime.setLat_open(lat);
+                routeStoreTime.setLon_open(0);
+//                routeStoreTime.setLon_open(lon);
                 routeStoreTime.setTime_open(created_at);
 
                 RouteStoreTimeRepo routeStoreTimeRepo = new RouteStoreTimeRepo(activity);

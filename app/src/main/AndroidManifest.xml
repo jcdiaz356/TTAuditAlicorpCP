@@ -30,7 +30,8 @@
         android:label="@string/app_name"
         android:roundIcon="@drawable/ic_launcher"
         android:supportsRtl="true"
-        android:theme="@style/AppTheme">
+        android:theme="@style/AppTheme"
+        android:hardwareAccelerated="true">
         <activity
             android:name=".MainActivity"
             android:screenOrientation="portrait">
@@ -121,7 +122,7 @@
         <activity
             android:name=".view.AndroidCustomGalleryActivity"
             android:screenOrientation="portrait" />
-        <activity android:name=".view.ProductCompetityActivity" />
+        <activity android:name=".view.ProductCompetityActivity" android:screenOrientation="portrait" />
 
         <activity android:name=".view.CameraActivity" />
 
@@ -170,7 +171,8 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".view.PublicitiesActivity" />
         </activity>
-        <activity android:name=".view.CategoryProductActivity"></activity>
+        <activity android:name=".view.CategoryProductActivity"
+            android:screenOrientation="portrait"></activity>
 
     </application>
 

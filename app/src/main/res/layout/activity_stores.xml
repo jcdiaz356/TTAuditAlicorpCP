@@ -6,7 +6,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:fitsSystemWindows="true"
-    tools:context="com.dataservicios.ttauditpalmeraauditor.view.StoresActivity">
+    tools:context="com.dataservicios.ttauditalicorpcp.view.StoresActivity">
 
     <include layout="@layout/actionbar_toolbar"/>
 

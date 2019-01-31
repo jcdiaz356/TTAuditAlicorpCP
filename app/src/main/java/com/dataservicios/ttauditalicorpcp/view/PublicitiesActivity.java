@@ -112,6 +112,7 @@ public class PublicitiesActivity extends AppCompatActivity {
         publicityRecyclerView.setLayoutManager(linearLayoutManager);
 
 //        publicityStores = (ArrayList<PublicityStore>) publicityStoreRepo.findAll();
+
         publicityStores = (ArrayList<PublicityStore>) publicityStoreRepo.findByCategoryIdAndTypeBodega(category_product_id,store.getType());
 
         int contador = 0;
@@ -247,7 +248,7 @@ public class PublicitiesActivity extends AppCompatActivity {
                 auditRoadStoreRepo.update(auditRoadStore);
                 finish();
             } else {
-                Toast.makeText(activity , R.string.message_no_save_data , Toast.LENGTH_LONG).show();
+                Toast.makeText(activity , R.string.message_no_save_data ,Toast.LENGTH_LONG).show();
             }
             pDialog.dismiss();
         }

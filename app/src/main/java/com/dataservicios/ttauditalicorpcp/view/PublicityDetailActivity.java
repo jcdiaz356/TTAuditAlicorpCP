@@ -168,10 +168,10 @@ public class PublicityDetailActivity extends AppCompatActivity {
         imgPublicity         = (ImageView)  findViewById(R.id.imgPublicity);
 
         DatabaseManager.init(this);
-        gpsTracker = new GPSTracker(activity);
-        if(!gpsTracker.canGetLocation()){
-            gpsTracker.showSettingsAlert();
-        }
+//        gpsTracker = new GPSTracker(activity);
+//        if(!gpsTracker.canGetLocation()){
+//            gpsTracker.showSettingsAlert();
+//        }
 
         Bundle bundle = getIntent().getExtras();
         store_id            = bundle.getInt("store_id");
